@@ -1,4 +1,4 @@
-# cursedgame
+# NotGwent
 
 ## Project setup
 ```

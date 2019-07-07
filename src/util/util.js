@@ -63,3 +63,28 @@ export const stripMarkup = function(text) {
 	const htmlTagPattern = /<[^>]+>/g
 	return text.replace(htmlTagPattern, '')
 }
+
+export const saveAsFile = function(data, filename, type) {
+	let file = new Blob([data], { type: type })
+	let a = document.createElement('a')
+	let url = URL.createObjectURL(file)
+	a.href = url
+	a.download = filename
+	document.body.appendChild(a)
+	a.click()
+	setTimeout(function() {
+		document.body.removeChild(a)
+		window.URL.revokeObjectURL(url)
+	}, 0)
+}
+
+export const getCardFileName = function(cardName, extension) {
+	if (!cardName || cardName.length === 0) {
+		return 'sw-unnamed.png'
+	}
+	let illegalNameCharacters = /[….,<>:"/\\|?*\x00-\x31\s]/g
+	let formattedName = cardName.replace(illegalNameCharacters, '')
+	formattedName = formattedName.trim()
+	formattedName = formattedName.substring(0, 1).toLowerCase() + formattedName.substring(1)
+	return 'sw-' + formattedName + '.' + extension
+}

@@ -14,6 +14,19 @@ export default {
 				}
 			}
 			return null
+		},
+		getCardsByName: state => name => {
+			return state.data.filter((obj) => obj.cardName === name)
+		}
+	},
+	actions: {
+		updateCard({ commit, getters }, cardData) {
+			let matchingCards = getters['getCardsByName'](cardData.cardName)
+			if (matchingCards.length > 0) {
+				let latestCard = matchingCards[matchingCards.length - 1]
+				commit('delete', latestCard)
+			}
+			commit('push', cardData)
 		}
 	},
 	mutations: {
@@ -37,17 +50,10 @@ export default {
 			}
 
 			if (item.cardDescription !== '') {
-				item.displayName += ': ' + stripMarkup(item.cardDescription)
+				item.displayName += '. ' + stripMarkup(item.cardDescription)
 			}
 
-			let prefix = capitalize(item.cardType)
-			if (item.cardElement !== Element.GENERIC) {
-				prefix = capitalize(item.cardElement) + ' ' + prefix
-			}
-			if (item.cardManaCost > 0) {
-				prefix = item.cardManaCost + ' Mana ' + prefix
-			}
-			prefix = '[' + prefix + ']'
+			let prefix = '[' + item.attack + '-' + item.health + '|' + item.initiative + ' ' + capitalize(item.cardType) + ']'
 			item.displayName = prefix + ' ' + item.displayName
 
 			item.version = 0

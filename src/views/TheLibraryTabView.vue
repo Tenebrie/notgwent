@@ -1,5 +1,5 @@
 <template>
-	<transition name="slide">
+	<transition name="slide-fade" appear>
 		<div class="toolbar-tab tab-output">
 			<div class='toolbar-tab-content'>
 				<main-table></main-table>

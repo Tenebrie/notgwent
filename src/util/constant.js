@@ -18,7 +18,11 @@ export const Type = {
 	ACTION: 'action',
 	PATH: 'path',
 	STATE: 'state',
-	RELEASE: 'release'
+	RELEASE: 'release',
+
+	LEADER: 'leader',
+	HERO: 'hero',
+	PAWN: 'pawn'
 }
 
 export const PathType = {
@@ -43,12 +47,18 @@ export const Tribe = {
 }
 
 export const ImportMethod = {
-	SAVE: 'save',
-	DOWNLOAD: 'download',
-	SAVE_AND_DOWNLOAD: 'save-and-download'
+	APPEND: 'append',
+	REPLACE: 'replace'
 }
 
 export const AttackType = {
 	NORMAL: 'normal',
 	HEALING: 'healing'
+}
+
+export const LibraryFileState = {
+	NOT_SELECTED: 'not_selected',
+	LOADING: 'loading',
+	PARSED: 'parsed',
+	INVALID: 'invalid'
 }

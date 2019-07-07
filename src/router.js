@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import TheFeaturesTabView from './views/TheFeaturesTabView.vue'
-import TheTextsTabView from './views/TheTextsTabView.vue'
+import TheArtworkTabView from './views/TheArtworkTabView.vue'
 import TheImportTabView from './views/TheImportTabView.vue'
 import TheLibraryTabView from './views/TheLibraryTabView.vue'
 
@@ -20,9 +20,9 @@ export default new Router({
 			component: TheFeaturesTabView
 		},
 		{
-			path: '/texts',
-			name: 'TextsTab',
-			component: TheTextsTabView
+			path: '/artwork',
+			name: 'ArtworkTab',
+			component: TheArtworkTabView
 		},
 		{
 			path: '/import',

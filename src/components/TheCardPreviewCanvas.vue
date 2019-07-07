@@ -7,8 +7,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import { stripMarkup } from '../util/util'
-import { Event, Color, PathType, Type, AttackType } from '../util/constant'
+import { getCardFileName, stripMarkup } from '../util/util'
+import { Event, Color, Type, AttackType } from '../util/constant'
 
 export default {
 	data: function() {
@@ -207,7 +207,7 @@ export default {
 
 		renderCanvasAfterDelay: function() {
 			if (this.canvasRenderDebounceTimer === null) {
-				this.canvasRenderDebounceTimer = setTimeout(this.renderCanvas, 0)
+				this.canvasRenderDebounceTimer = setTimeout(this.renderCanvas, 8)
 			}
 		},
 
@@ -246,49 +246,12 @@ export default {
 
 			let state = this.$store.state.cardState
 
-			let elementFileName = 'bg-element-' + state.cardElement
-			this.renderImage(ctx, elementFileName)
-
-			if (state.cardType === Type.ACTION) {
-				this.renderImage(ctx, 'bg-path-begin')
-			} else if (state.cardType === Type.PATH && state.cardPathType === PathType.NORMAL) {
-				this.renderImage(ctx, 'bg-path-normal')
-			} else if (state.cardType === Type.PATH && state.cardPathType === PathType.FORK) {
-				this.renderImage(ctx, 'bg-path-fork')
-			} else if (state.cardType === Type.STATE) {
-				this.renderImage(ctx, 'bg-path-stop')
-			} else if (state.cardType === Type.RELEASE) {
-				this.renderImage(ctx, 'bg-path-end')
-			}
-
-			if (state.isFreeBuild || state.isFreeDraw || state.isFreeMove) {
-				this.renderImage(ctx, 'bg-attribute')
-				if (state.isFreeBuild && state.isFreeDraw && state.isFreeMove) {
-					this.renderImage(ctx, 'attr-freeBuildDrawAndMove')
-				} else if (state.isFreeBuild && state.isFreeDraw) {
-					this.renderImage(ctx, 'attr-freeBuildAndDraw')
-				} else if (state.isFreeBuild && state.isFreeMove) {
-					this.renderImage(ctx, 'attr-freeBuildAndMove')
-				} else if (state.isFreeDraw && state.isFreeMove) {
-					this.renderImage(ctx, 'attr-freeDrawAndMove')
-				} else if (state.isFreeBuild) {
-					this.renderImage(ctx, 'attr-freeBuild')
-				} else if (state.isFreeDraw) {
-					this.renderImage(ctx, 'attr-freeDraw')
-				} else if (state.isFreeMove) {
-					this.renderImage(ctx, 'attr-freeMove')
-				}
-			}
-
-			if (state.isPermanent) {
-				this.renderImage(ctx, 'attr-permanent')
-			}
-
-			if (state.cardManaCost >= 1 && state.cardManaCost <= 12) {
-				this.renderImage(ctx, 'manacost-' + state.cardManaCost)
-			}
-			if (state.cardGoldCost > 0) {
-				this.renderImage(ctx, 'goldcost-' + state.cardGoldCost)
+			if (state.cardType === Type.PAWN) {
+				this.renderImage(ctx, 'bg-element-generic')
+			} else if (state.cardType === Type.HERO) {
+				this.renderImage(ctx, 'bg-element-healing')
+			} else if (state.cardType === Type.LEADER) {
+				this.renderImage(ctx, 'bg-element-summoning')
 			}
 
 			if (state.cardDescription !== '') {
@@ -717,26 +680,14 @@ export default {
 			ctx.drawImage(this.customArtwork, 0, 0, this.canvasWidth, this.canvasHeight)
 		},
 
-		getCardFileName: function() {
-			let enteredName = this.$store.state.cardState.cardName
-			if (enteredName.length === 0) {
-				return 'sw-unnamed.png'
-			} else {
-				let illegalNameCharacters = /[….,<>:"/\\|?*\x00-\x31\s]/g
-				let formattedName = enteredName.replace(illegalNameCharacters, '')
-				formattedName = formattedName.trim()
-				formattedName = formattedName.substring(0, 1).toLowerCase() + formattedName.substring(1)
-				return 'sw-' + formattedName + '.png'
-			}
-		},
-
 		saveCanvasToFile: function() {
 			let image = this.displayedContext.canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
 
+			let cardName = this.$store.state.cardState.cardName
 			let anchorTag = document.createElement('a')
 			document.body.appendChild(anchorTag)
 			anchorTag.setAttribute('href', image)
-			anchorTag.setAttribute('download', this.getCardFileName())
+			anchorTag.setAttribute('download', getCardFileName(cardName, 'png'))
 			anchorTag.click()
 			setTimeout(function() {
 				document.body.removeChild(anchorTag)

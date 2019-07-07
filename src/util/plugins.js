@@ -1,4 +1,5 @@
 import { Event } from './constant'
+import { debounce } from 'throttle-debounce'
 
 let storageKey = 'cardLibrary'
 let localStorage = {
@@ -30,10 +31,14 @@ export const undoRedoPlugin = (store) => {
 	undoRedoHistory.init(store)
 
 	let firstState = JSON.parse(JSON.stringify(store.state))
-	undoRedoHistory.addState('', firstState)
+	undoRedoHistory.addState(firstState)
+
+	let addStateDebouncedFunction = debounce(1000, (state) => {
+		undoRedoHistory.addState(JSON.parse(JSON.stringify(state)))
+	})
 
 	store.subscribe((mutation, state) => {
-		undoRedoHistory.addState(mutation.type, JSON.parse(JSON.stringify(state)))
+		addStateDebouncedFunction(state)
 	})
 }
 
@@ -46,18 +51,13 @@ export const undoRedoHistory = {
 		this.store = store
 	},
 
-	addState(mutation, state) {
+	addState(state) {
 		// Invalidate old timeline
 		if (this.currentIndex + 1 < this.history.length) {
 			this.history.splice(this.currentIndex + 1)
 		}
 
-		// Squash all deletions into one
-		if (this.history[this.history.length - 1] !== undefined && this.history[this.history.length - 1].type === 'cardLibrary/delete' && mutation === 'cardLibrary/delete') {
-			this.currentIndex -= 1
-			this.history.splice(-1)
-		}
-		this.history.push({ type: mutation, state: state })
+		this.history.push({ state: state })
 		this.currentIndex++
 	},
 
@@ -85,7 +85,7 @@ export const undoRedoHistory = {
 		if (JSON.stringify(previousState.state.cardState) !== JSON.stringify(targetState.state.cardState)) {
 			root.$emit(Event.CARD_STATE_UPDATED)
 		}
-		if (JSON.stringify(previousState.state.cardLibrary) !== JSON.stringify(targetState.state.cardLibrary)) {
+		if (previousState && JSON.stringify(previousState.state.cardLibrary) !== JSON.stringify(targetState.state.cardLibrary)) {
 			localStorage.save(targetState.state.cardLibrary.data)
 		}
 	}

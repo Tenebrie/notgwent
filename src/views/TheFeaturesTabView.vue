@@ -1,12 +1,12 @@
 <template>
-	<transition name="slide">
+	<transition name="slide-fade" appear>
 		<div class="toolbar-tab tab-features">
 			<card-name></card-name>
 			<features-card-title-textbox />
-			<card-description></card-description>
 			<card-tribe></card-tribe>
+			<card-description></card-description>
 			<div class="dropdowns">
-				<card-element></card-element>
+				<card-type-dropdown />
 				<card-attack-dropdown />
 				<card-health-dropdown />
 				<card-initiative-textbox />
@@ -17,19 +17,19 @@
 </template>
 
 <script>
-import { Type } from '../util/constant'
 import cardName from '../components/FeaturesCardNameTextbox.vue'
 import cardTribe from '../components/FeaturesCardTribeTextbox.vue'
-import cardElement from '../components/FeaturesCardElementDropdown.vue'
 import cardDescription from '../components/FeaturesCardDescriptionTextbox.vue'
 import CardAttackDropdown from '../components/CardAttackDropdown'
 import CardHealthDropdown from '../components/CardHealthDropdown'
 import CardInitiativeTextbox from '../components/CardInitiativeTextbox'
 import FeaturesCardTitleTextbox from '../components/FeaturesCardTitleTextbox'
 import CardAttackTypeDropdown from '../components/CardAttackTypeDropdown'
+import CardTypeDropdown from '../components/CardTypeDropdown'
 
 export default {
 	components: {
+		CardTypeDropdown,
 		CardAttackTypeDropdown,
 		FeaturesCardTitleTextbox,
 		CardInitiativeTextbox,
@@ -37,13 +37,7 @@ export default {
 		CardHealthDropdown,
 		cardName,
 		cardDescription,
-		cardTribe,
-		cardElement
-	},
-	computed: {
-		isPathTypeVisible() {
-			return this.$store.state.cardState.cardType === Type.PATH
-		}
+		cardTribe
 	}
 }
 </script>

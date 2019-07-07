@@ -1,5 +1,5 @@
 <template>
-	<base-file-selector @select="onFileSelected" />
+	<base-file-selector file-type="image/png, image/jpeg" @select="onFileSelected" />
 </template>
 
 <script>

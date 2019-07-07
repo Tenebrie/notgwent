@@ -1,5 +1,5 @@
 {
-	"name": "cursedgame",
+	"name": "notgwent",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -25,11 +25,13 @@
 		"@vue/test-utils": "1.0.0-beta.29",
 		"babel-eslint": "^10.0.1",
 		"chai": "^4.1.2",
+		"debounce": "^1.2.0",
 		"eslint": "^5.16.0",
 		"eslint-plugin-vue": "^5.0.0",
 		"lint-staged": "^8.1.5",
 		"node-sass": "^4.9.0",
 		"sass-loader": "^7.1.0",
+		"throttle-debounce": "^2.1.0",
 		"vue-template-compiler": "^2.6.10"
 	},
 	"eslintConfig": {
@@ -43,10 +45,20 @@
 			"@vue/standard"
 		],
 		"rules": {
-			"indent": [2, "tab"],
-			"space-before-function-paren": ["error", "never"],
-			"no-tabs": ["off"],
-			"no-control-regex": ["off"]
+			"indent": [
+				2,
+				"tab"
+			],
+			"space-before-function-paren": [
+				"error",
+				"never"
+			],
+			"no-tabs": [
+				"off"
+			],
+			"no-control-regex": [
+				"off"
+			]
 		},
 		"parserOptions": {
 			"parser": "babel-eslint"

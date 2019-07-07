@@ -73,6 +73,7 @@ export default {
 		.library-items-container-wrapper {
 			overflow-y: auto;
 			padding-right: 10px;
+			max-height: calc(100vh - 102px);
 
 			&::-webkit-scrollbar {
 				width: 5px;

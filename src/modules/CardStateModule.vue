@@ -12,7 +12,7 @@ export default {
 		cardTitle: '',
 		cardDescription: '',
 		cardTribe: '',
-		cardType: Type.PRIME,
+		cardType: Type.PAWN,
 		cardPathType: PathType.NORMAL,
 		cardElement: Element.GENERIC,
 		cardGoldCost: 0,
@@ -49,6 +49,12 @@ export default {
 			state.customImageData = value.customImageData
 			state.customImageOffsetX = value.customImageOffsetX
 			state.customImageOffsetY = value.customImageOffsetY
+			if (state.cardType === Type.PRIME) {
+				state.cardType = Type.PAWN
+			}
+			if (state.cardElement !== Element.GENERIC) {
+				state.cardElement = Element.GENERIC
+			}
 		},
 		clear(state) {
 			state.cardName = ''
@@ -59,7 +65,7 @@ export default {
 			state.isFreeBuild = false
 			state.isFreeMove = false
 			state.isPermanent = false
-			state.cardType = Type.PRIME
+			state.cardType = Type.PAWN
 			state.cardPathType = PathType.NORMAL
 			state.cardElement = Element.GENERIC
 			state.cardGoldCost = 0

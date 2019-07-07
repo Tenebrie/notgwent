@@ -4,7 +4,7 @@ import { ImportMethod } from '../util/constant'
 export default {
 	namespaced: true,
 	state: {
-		importMethod: ImportMethod.SAVE
+		importMethod: ImportMethod.APPEND
 	},
 	mutations: {
 		setImportMethod(state, value) {

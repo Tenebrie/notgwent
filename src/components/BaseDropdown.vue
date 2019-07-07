@@ -3,8 +3,7 @@
 		<label><slot></slot></label>
 		<div class="card-drop">
 			<button @click='onTopClick' class='button-top'>
-				<i :class='getIconClass(activeItem)'></i>
-				<span class='label-active'>{{ activeItem.title }} </span>
+				<i :class='getIconClass(activeItem)'></i>&nbsp;<span class='label-active'>{{ activeItem.title }} </span>
 				<span class='caret-down'>&nbsp;<i class="fas fa-caret-down"></i>&nbsp;</span>
 			</button>
 			<ul>

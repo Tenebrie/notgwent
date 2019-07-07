@@ -1,5 +1,5 @@
 <template>
-	<button v-on:click='onClickInternal'><i :class='iconClass'></i>   {{ buttonText }}</button>
+	<button class="base-button" v-on:click='onClickInternal'><i :class='iconClass'></i>   {{ buttonText }}<slot></slot></button>
 </template>
 
 <script>
@@ -31,10 +31,15 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-	.hidden {
-		display: none;
-	}
-	i {
-		margin-right: 3px;
+	.base-button {
+		margin: 10px;
+
+		.hidden {
+			display: none;
+		}
+
+		i {
+			margin-right: 3px;
+		}
 	}
 </style>

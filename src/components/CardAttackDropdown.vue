@@ -1,5 +1,5 @@
 <template>
-	<base-dropdown :items="items" zIndex="20" :selectedValue="attack" @select="setAttack">Attack value</base-dropdown>
+	<base-dropdown :items="items" zIndex="25" :selectedValue="attack" @select="setAttack">Attack value</base-dropdown>
 </template>
 
 <script>

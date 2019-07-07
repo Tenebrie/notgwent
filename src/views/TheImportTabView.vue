@@ -1,19 +1,23 @@
 <template>
-	<transition name="slide">
+	<transition name="slide-fade" appear>
 		<div class="toolbar-tab tab-features">
-			<div class='import-controls'>
-				<import-from-list></import-from-list>
-			</div>
+			<the-library-exporter />
+			<base-divider />
+			<the-library-importer />
 		</div>
 	</transition>
 </template>
 
 <script>
-import importFromList from '../components/ImportSourceTextbox.vue'
+import BaseDivider from '../components/BaseDivider'
+import TheLibraryExporter from '../components/TheLibraryExporter'
+import TheLibraryImporter from '../components/TheLibraryImporter'
 
 export default {
 	components: {
-		importFromList
+		BaseDivider,
+		TheLibraryExporter,
+		TheLibraryImporter
 	}
 }
 </script>

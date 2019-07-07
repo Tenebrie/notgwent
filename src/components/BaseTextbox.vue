@@ -1,14 +1,20 @@
 <template>
 	<div class='text-input'>
 		<label><slot></slot></label>
-		<input v-if='!multiline' class='card-title' type='text' v-model='text' :placeholder='placeholder' />
-		<textarea v-if='multiline' class='card-title' type='text' :rows='rows' v-model='text' :placeholder='placeholder'></textarea>
+		<input v-if='!multiline' class='card-title' type='text' v-model='text' :placeholder='placeholder' :readonly="readonly" @keydown="onKeyDown"/>
+		<textarea v-if='multiline' class='card-title' :rows='rows' v-model='text' :placeholder='placeholder' :readonly="readonly" @keydown="onKeyDown"></textarea>
 	</div>
 </template>
 
 <script>
 export default {
-	props: ['value', 'rows', 'onInput', 'placeholder'],
+	props: {
+		rows: Number,
+		value: [String, Number],
+		onInput: Function,
+		readonly: Boolean,
+		placeholder: String
+	},
 	computed: {
 		text: {
 			get() {
@@ -23,6 +29,13 @@ export default {
 		},
 		multiline() {
 			return this.rows !== undefined && this.rows > 1
+		}
+	},
+
+	methods: {
+		onKeyDown: function(event) {
+			if (event.ctrlKey && (event.key === 'z' || event.key === 'y')) {
+			}
 		}
 	}
 }

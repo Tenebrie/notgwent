@@ -15,7 +15,7 @@
 		<div class="toolbar">
 			<div class="tabs-container">
 				<router-link class="tab one" :to="{ name: 'FeaturesTab' }">Features</router-link><!--
-			--><router-link class="tab two" :to="{ name: 'TextsTab' }">Texts</router-link><!--
+			--><router-link class="tab two" :to="{ name: 'ArtworkTab' }">Artwork</router-link><!--
 			--><router-link class="tab three" :to="{ name: 'ImportTab' }">Import</router-link><!--
 			--><router-link class="tab four" :to="{ name: 'LibraryTab' }">Library</router-link>
 				<hr />
@@ -29,9 +29,9 @@
 </template>
 
 <script>
-import minibar from './components/TheMinibar.vue'
-import sidebar from './components/TheSidebar.vue'
-import sidebarToggle from './components/SidebarToggleButton.vue'
+import minibar from './components/sidebar/TheMinibar.vue'
+import sidebar from './components/sidebar/TheSidebar.vue'
+import sidebarToggle from './components/sidebar/TheVisibilityToggleButton.vue'
 import previewCanvas from './components/TheCardPreviewCanvas.vue'
 import { undoRedoHistory } from './util/plugins'
 
@@ -60,9 +60,11 @@ export default {
 	mounted() {
 		window.addEventListener('keydown', (event) => {
 			if (event.code === 'KeyZ' && event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
-				undoRedoHistory.undo(this)
+				undoRedoHistory.undo(this.$root)
+				event.preventDefault()
 			} else if (event.code === 'KeyY' && event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
-				undoRedoHistory.redo(this)
+				undoRedoHistory.redo(this.$root)
+				event.preventDefault()
 			}
 		})
 	}
@@ -83,15 +85,19 @@ export default {
 		overflow: hidden;
 	}
 
-	.slide-leave-active,
-	.slide-enter-active {
-		transition: 0.5s ease;
+	.slide-fade-enter-active {
+		transition: all .3s ease;
 	}
-	.slide-enter {
-		transform: translate(200%, 0);
+	.slide-fade-leave-active {
+		transition: all .3s ease;
 	}
-	.slide-leave-to {
-		transform: translate(-100%, 0);
+	.slide-fade-enter, .slide-fade-leave-to {
+		transform: translateX(16px);
+		opacity: 0;
+	}
+	.slide-fade-leave-to {
+		transform: translateX(-16px);
+		opacity: 0;
 	}
 
 	//======================================================================
