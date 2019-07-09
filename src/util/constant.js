@@ -62,3 +62,11 @@ export const LibraryFileState = {
 	PARSED: 'parsed',
 	INVALID: 'invalid'
 }
+
+export const DisplayedBudgetLabel = {
+	ATTACK_COST: 'attack_cost',
+	HEALTH_COST: 'health_cost',
+	TRIBE_COST: 'tribe_cost',
+	DESCRIPTION: 'description',
+	TOTAL: 'total'
+}

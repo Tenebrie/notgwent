@@ -41,7 +41,12 @@ export default {
 
 		exportLibrary() {
 			let data = btoa(encodeURI(JSON.stringify(this.cardLibrary)))
-			saveAsFile(data, 'card_library.txt', 'text/plain')
+			let currentDate = new Date()
+			let day = (currentDate.getDate() < 10 ? '0' : '') + currentDate.getDate()
+			let month = currentDate.getMonth() + 1
+			month = (month < 10 ? '0' : '') + month
+			let filename = day + '-' + month + '-' + currentDate.getFullYear() + '.txt'
+			saveAsFile(data, filename, 'text/plain')
 		}
 	}
 }

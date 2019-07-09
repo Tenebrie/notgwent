@@ -48,6 +48,7 @@ export default {
 	methods: {
 		onClick: function(cardId) {
 			if (!this.$parent.isInSelectState) {
+				this.$store.commit('cardState/clear')
 				this.$store.commit('cardState/load', this.$store.getters['cardLibrary/getCardById'](cardId))
 			} else {
 				this.isSelected = !this.isSelected

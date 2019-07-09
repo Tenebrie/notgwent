@@ -19,7 +19,9 @@ export default {
 		cardManaCost: 0,
 
 		attack: -1,
+		attackRange: 1,
 		health: -1,
+		healthArmor: 0,
 		initiative: 50,
 		attackType: AttackType.NORMAL,
 		customImageData: '',
@@ -43,7 +45,9 @@ export default {
 			state.cardManaCost = value.cardManaCost
 
 			state.attack = value.attack
+			if (value.attackRange) state.attackRange = value.attackRange
 			state.health = value.health
+			if (value.healthArmor) state.healthArmor = value.healthArmor
 			state.initiative = value.initiative
 			state.attackType = value.attackType
 			state.customImageData = value.customImageData
@@ -72,7 +76,9 @@ export default {
 			state.cardManaCost = 0
 
 			state.attack = -1
+			state.attackRange = 1
 			state.health = -1
+			state.healthArmor = 0
 			state.initiative = 50
 			state.attackType = AttackType.NORMAL
 			state.customImageData = ''
@@ -122,8 +128,14 @@ export default {
 		setAttack(state, value) {
 			state.attack = value
 		},
+		setAttackRange(state, value) {
+			state.attackRange = value
+		},
 		setHealth(state, value) {
 			state.health = value
+		},
+		setHealthArmor(state, value) {
+			state.healthArmor = value
 		},
 		setInitiative(state, value) {
 			state.initiative = value

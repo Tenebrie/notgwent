@@ -88,3 +88,18 @@ export const getCardFileName = function(cardName, extension) {
 	formattedName = formattedName.substring(0, 1).toLowerCase() + formattedName.substring(1)
 	return 'sw-' + formattedName + '.' + extension
 }
+
+export const getFibonacci = function(num) {
+	let a = 1
+	let b = 0
+	let temp
+
+	while (num >= 0) {
+		temp = a
+		a = a + b
+		b = temp
+		num--
+	}
+
+	return b
+}

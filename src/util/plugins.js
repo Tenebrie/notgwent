@@ -1,14 +1,14 @@
 import { Event } from './constant'
 import { debounce } from 'throttle-debounce'
 
-let storageKey = 'cardLibrary'
+// let storageKey = 'cardLibrary'
 let localStorage = {
 	load: function() {
-		let json = window.localStorage.getItem(storageKey) || JSON.stringify('')
-		return JSON.parse(json)
+		// let json = window.localStorage.getItem(storageKey) || JSON.stringify('')
+		return JSON.parse('{"data": []}')
 	},
 	save: function(content) {
-		window.localStorage.setItem(storageKey, JSON.stringify(content))
+		// window.localStorage.setItem(storageKey, JSON.stringify(content))
 	}
 }
 

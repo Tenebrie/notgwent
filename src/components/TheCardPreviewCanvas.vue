@@ -180,8 +180,11 @@ export default {
 				'attr-freeBuildDrawAndMove',
 				'attr-permanent',
 				'stat-attack-claw',
+				'stat-attack-ranged',
 				'stat-attack-heal',
-				'stat-defense-shield'
+				'stat-defense-health',
+				'stat-defense-shield',
+				'stat-defense-shield2'
 			]
 
 			for (let i = 1; i <= 12; i++) {
@@ -262,7 +265,7 @@ export default {
 					color: Color.DEFAULT_CARD_TEXT,
 					targetX: realWidth / 2,
 					targetY: 420,
-					lineHeight: 20,
+					lineHeight: 24,
 					maxWidth: realWidth - 50,
 					maxHeight: 110
 				})
@@ -309,16 +312,22 @@ export default {
 			}
 
 			if (state.cardTribe !== '') {
-				this.renderImage(ctx, 'bg-tribe-modern')
-				this.renderCardText(ctx, {
-					text: state.cardTribe,
-					font: this.getFont('18px', state.cardTribe),
-					color: 'black',
-					targetX: 390,
-					targetY: 129,
-					lineHeight: 24,
-					horizontalAlign: 'right'
-				})
+				let tribes = state.cardTribe.split(';')
+
+				for (let tribeIndex in tribes) {
+					let tribe = tribes[tribeIndex].trim()
+					let verticalOffset = 40 * tribeIndex
+					this.renderImage(ctx, 'bg-tribe-modern', { verticalOffset })
+					this.renderCardText(ctx, {
+						text: tribe,
+						font: this.getFont('18px', tribe),
+						color: 'black',
+						targetX: 390,
+						targetY: 129 + verticalOffset,
+						lineHeight: 24,
+						horizontalAlign: 'right'
+					})
+				}
 			}
 
 			if (state.attack >= 0 || state.health >= 0) {
@@ -326,10 +335,23 @@ export default {
 			}
 
 			if (state.attack >= 0) {
-				if (state.attackType === AttackType.NORMAL) {
+				if (state.attackType === AttackType.NORMAL && state.attackRange === 1) {
 					this.renderImage(ctx, 'stat-attack-claw')
+				} else if (state.attackType === AttackType.NORMAL && state.attackRange > 1) {
+					this.renderImage(ctx, 'stat-attack-ranged')
 				} else if (state.attackType === AttackType.HEALING) {
 					this.renderImage(ctx, 'stat-attack-heal')
+				}
+
+				if (state.attackRange !== 1) {
+					this.renderCardText(ctx, {
+						text: state.attackRange.toString(),
+						font: '18px BrushScript',
+						color: 'black',
+						targetX: 280,
+						targetY: 572,
+						lineHeight: 24
+					})
 				}
 
 				if (state.attack < 10) {
@@ -337,7 +359,7 @@ export default {
 						text: state.attack.toString(),
 						font: '46px BrushScript',
 						color: 'black',
-						targetX: 298,
+						targetX: 302,
 						targetY: 568,
 						lineHeight: 24
 					})
@@ -346,14 +368,26 @@ export default {
 						text: state.attack.toString(),
 						font: '42px BrushScript',
 						color: 'black',
-						targetX: 300,
+						targetX: 304,
 						targetY: 568,
 						lineHeight: 24
 					})
 				}
 			}
 			if (state.health >= 0) {
-				this.renderImage(ctx, 'stat-defense-shield')
+				if (state.healthArmor === 0) {
+					this.renderImage(ctx, 'stat-defense-health')
+				} else {
+					this.renderImage(ctx, 'stat-defense-shield')
+					this.renderCardText(ctx, {
+						text: state.healthArmor.toString(),
+						font: '18px BrushScript',
+						color: 'white',
+						targetX: 348,
+						targetY: 560,
+						lineHeight: 24
+					})
+				}
 				if (state.health < 10) {
 					this.renderCardText(ctx, {
 						text: state.health.toString(),
@@ -666,14 +700,18 @@ export default {
 			updatedImage.src = canvas.toDataURL('image/png')
 		},
 
-		renderImage: function(ctx, imageId) {
+		renderImage: function(ctx, imageId, options) {
 			let image = this.imageCache[imageId]
 			if (image === undefined) {
 				console.error('Unable to load image: ' + imageId + '.png')
 				return
 			}
 
-			ctx.drawImage(image, 0, 0, this.canvasWidth, this.canvasHeight)
+			options = options || {}
+			let horizontalOffset = options.horizontalOffset || 0
+			let verticalOffset = options.verticalOffset || 0
+
+			ctx.drawImage(image, horizontalOffset, verticalOffset, this.canvasWidth, this.canvasHeight)
 		},
 
 		renderCustomArtwork: function(ctx) {
