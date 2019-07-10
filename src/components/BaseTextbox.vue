@@ -56,7 +56,7 @@ export default {
 		input[type='text'], textarea {
 			font: 16px/1.4 "Roboto", sans-serif;
 			letter-spacing: 0.5px;
-			padding: 10px;
+			padding: 5px;
 			margin-top: 5px;
 			resize: none;
 			display: block;

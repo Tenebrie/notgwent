@@ -49,10 +49,9 @@ export const uuidv4 = function() {
 }
 
 export const toCamelCase = function(str) {
-	if (str === undefined || str === null) {
-		return ''
-	}
-	return str.replace(/[A-Z]/g, ' $&').replace(/^./, str.toUpperCase())
+	return str.replace(/(^|\s)[a-zA-Zа-яА-Я]/g, function(word) {
+		return word[0] === ' ' ? word[1].toUpperCase() : word[0].toLowerCase()
+	})
 }
 
 export const capitalize = function(str) {
@@ -82,10 +81,11 @@ export const getCardFileName = function(cardName, extension) {
 	if (!cardName || cardName.length === 0) {
 		return 'sw-unnamed.png'
 	}
-	let illegalNameCharacters = /[….,<>:"/\\|?*\x00-\x31\s]/g
-	let formattedName = cardName.replace(illegalNameCharacters, '')
+	let formattedName = cardName.replace(/<[^>]*>/g, '')
+	formattedName = toCamelCase(formattedName)
+	let illegalNameCharacters = /[….,<>:"/\\|?*\x00-\x31]/g
+	formattedName = formattedName.replace(illegalNameCharacters, '')
 	formattedName = formattedName.trim()
-	formattedName = formattedName.substring(0, 1).toLowerCase() + formattedName.substring(1)
 	return 'sw-' + formattedName + '.' + extension
 }
 

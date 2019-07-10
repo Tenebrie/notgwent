@@ -47,11 +47,6 @@ export default {
 				attackCost *= 1.5
 			} else {
 				attackCost *= 1 + (100 - this.initiative) * 0.015
-				/* if (this.initiative >= 50) {
-					attackCost *= 1 - ((this.initiative - 50) * 0.015)
-				} else {
-					attackCost *= 1 + (50 - this.initiative) * 0.06
-				} */
 			}
 			return Math.round(attackCost)
 		},
@@ -60,11 +55,6 @@ export default {
 			let healthCost = 0
 			if (this.health > 0) {
 				healthCost = this.health * Math.pow(1.5, this.healthArmor)
-				/* if (this.initiative >= 50) {
-					healthCost *= 1 + ((this.initiative - 50) * 0.03)
-				} else {
-					healthCost *= 1 - (50 - this.initiative) * 0.005
-				} */
 			}
 			return Math.round(healthCost)
 		},

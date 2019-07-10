@@ -18,9 +18,9 @@ export default {
 		cardGoldCost: 0,
 		cardManaCost: 0,
 
-		attack: -1,
+		attack: 1,
 		attackRange: 1,
-		health: -1,
+		health: 1,
 		healthArmor: 0,
 		initiative: 50,
 		attackType: AttackType.NORMAL,
@@ -75,9 +75,9 @@ export default {
 			state.cardGoldCost = 0
 			state.cardManaCost = 0
 
-			state.attack = -1
+			state.attack = 1
 			state.attackRange = 1
-			state.health = -1
+			state.health = 1
 			state.healthArmor = 0
 			state.initiative = 50
 			state.attackType = AttackType.NORMAL

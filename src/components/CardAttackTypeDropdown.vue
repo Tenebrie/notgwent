@@ -18,11 +18,11 @@ export default {
 		items: function() {
 			return [
 				{
-					title: 'Normal',
+					title: '- Normal -',
 					value: AttackType.NORMAL
 				},
 				{
-					title: 'Healing',
+					title: '- Healing -',
 					value: AttackType.HEALING
 				}
 			]

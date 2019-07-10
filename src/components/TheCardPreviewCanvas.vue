@@ -266,8 +266,8 @@ export default {
 					targetX: realWidth / 2,
 					targetY: 420,
 					lineHeight: 24,
-					maxWidth: realWidth - 50,
-					maxHeight: 110
+					maxWidth: realWidth - 24,
+					maxHeight: 24 * 5
 				})
 			}
 
@@ -433,30 +433,6 @@ export default {
 			return size + ' ' + font
 		},
 
-		renderText: function(ctx, font, color, text, targetX, targetY, lineHeight, maxWidth, maxHeight) {
-			if (text === null || text.length === 0) {
-				return
-			}
-			if (maxWidth === undefined) {
-				maxWidth = targetX * 2
-			}
-			if (maxHeight === undefined) {
-				maxHeight = 0
-			}
-
-			this.renderCardText(ctx, {
-				text: text,
-				font: font,
-				color: color,
-				targetX: targetX,
-				targetY: targetY,
-				lineHeight: lineHeight,
-				maxWidth: maxWidth,
-				maxHeight: maxHeight,
-				horizontalAlign: 'center'
-			})
-		},
-
 		renderCardText: function(ctx, options) {
 			let text = options.text
 			if (!text || text.length === 0) { return }
@@ -467,9 +443,9 @@ export default {
 			let color = options.color || 'black'
 			let lineHeight = options.lineHeight || 16
 			let maxWidth = options.maxWidth || targetX * 2
-			let maxHeight = options.maxHeight || 0
+			let maxHeight = options.maxHeight || lineHeight
 			let horizontalAlign = options.horizontalAlign || 'center'
-			let verticalAlign = options.verticalAlign || 'center'
+			let verticalAlign = options.verticalAlign || 'bottom'
 
 			ctx.font = font
 			ctx.fillStyle = color
@@ -482,7 +458,8 @@ export default {
 
 			while (paragraphs.length > 0) {
 				let words = paragraphs[0].split(' ')
-				let currentLineText = null; let currentTextCandidate = null
+				let currentLineText = null
+				let currentTextCandidate = null
 
 				while (words.length > 0) {
 					currentTextCandidate = words[0]
@@ -490,12 +467,11 @@ export default {
 						currentTextCandidate = currentLineText + ' ' + currentTextCandidate
 					}
 					let width = ctx.measureText(stripMarkup(currentTextCandidate)).width
-					if (width < maxWidth) {
+					if (width < maxWidth && currentLineY < maximumLineY) {
 						currentLineText = currentTextCandidate
 						words.splice(0, 1)
 					} else if (currentLineText != null) {
-						if (currentLineY + lineHeight >= maximumLineY) {
-							currentLineText += '...'
+						if (currentLineY + lineHeight > maximumLineY) {
 							break
 						}
 						textLines.push({
@@ -510,6 +486,9 @@ export default {
 						break
 					}
 				}
+				if (currentLineY + lineHeight > maximumLineY) {
+					break
+				}
 
 				paragraphs.splice(0, 1)
 				textLines.push({
@@ -518,15 +497,15 @@ export default {
 					targetY: currentLineY
 				})
 				if (paragraphs.length > 0) {
-					currentLineY += lineHeight * 1.2
+					currentLineY += lineHeight * 1.0
 				}
 			}
 
 			let offset = 0
 			if (verticalAlign === 'center') {
-				offset = (maximumLineY - currentLineY) / 2
+				offset = (maximumLineY - currentLineY) / 2 - lineHeight / 2
 			} else if (verticalAlign === 'bottom') {
-				offset = -currentLineY
+				offset = (maximumLineY - currentLineY) - lineHeight
 			}
 
 			for (let lineIndex in textLines) {
@@ -567,6 +546,11 @@ export default {
 			let currentLineX = renderTargetX
 
 			let words = text.split(' ')
+			//ctx.strokeStyle = 'black'
+			//ctx.lineWidth = 2
+			//ctx.miterLimit = 2
+			//ctx.lineJoin = 'round'
+			ctx.shadowBlur = 6
 
 			while (words.length > 0) {
 				let word = words[0]
@@ -574,6 +558,7 @@ export default {
 				if (words.length > 1) {
 					cleanWord += ' '
 				}
+				//ctx.strokeText(cleanWord, currentLineX, targetY)
 
 				results = colorTagPairPattern.exec(word)
 				if (results !== null) {

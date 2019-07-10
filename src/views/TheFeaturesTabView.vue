@@ -17,14 +17,14 @@
 			<base-divider />
 			<card-budget-label :displayed-label="DisplayedBudgetLabel.ATTACK_COST" />
 			<div class="dropdowns">
-				<card-attack-dropdown />
+				<card-attack-textbox />
 				<card-attack-range-dropdown />
 				<card-attack-type-dropdown />
 			</div>
 			<base-divider />
 			<card-budget-label :displayed-label="DisplayedBudgetLabel.HEALTH_COST" />
 			<div class="dropdowns">
-				<card-health-dropdown />
+				<card-health-textbox />
 				<card-health-armor-dropdown />
 			</div>
 		</div>
@@ -36,8 +36,6 @@ import BaseDivider from '../components/BaseDivider'
 import cardName from '../components/FeaturesCardNameTextbox.vue'
 import cardTribe from '../components/FeaturesCardTribeTextbox.vue'
 import cardDescription from '../components/FeaturesCardDescriptionTextbox.vue'
-import CardAttackDropdown from '../components/CardAttackDropdown'
-import CardHealthDropdown from '../components/CardHealthDropdown'
 import CardInitiativeTextbox from '../components/CardInitiativeTextbox'
 import FeaturesCardTitleTextbox from '../components/FeaturesCardTitleTextbox'
 import CardAttackTypeDropdown from '../components/CardAttackTypeDropdown'
@@ -46,9 +44,13 @@ import CardBudgetLabel from '../components/CardBudgetLabel'
 import CardAttackRangeDropdown from '../components/CardAttackRangeDropdown'
 import CardHealthArmorDropdown from '../components/CardHealthArmorDropdown'
 import { DisplayedBudgetLabel } from '../util/constant'
+import CardAttackTextbox from '../components/CardAttackTextbox'
+import CardHealthTextbox from '../components/CardHealthTextbox'
 
 export default {
 	components: {
+		CardHealthTextbox,
+		CardAttackTextbox,
 		CardHealthArmorDropdown,
 		CardAttackRangeDropdown,
 		BaseDivider,
@@ -57,8 +59,6 @@ export default {
 		CardAttackTypeDropdown,
 		FeaturesCardTitleTextbox,
 		CardInitiativeTextbox,
-		CardAttackDropdown,
-		CardHealthDropdown,
 		cardName,
 		cardDescription,
 		cardTribe
