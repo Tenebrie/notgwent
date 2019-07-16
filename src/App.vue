@@ -67,6 +67,22 @@ export default {
 				event.preventDefault()
 			}
 		})
+
+		window.addEventListener('paste', (event) => {
+			let items = (event.clipboardData || event.originalEvent.clipboardData).items
+			for (let index in items) {
+				let item = items[index]
+				if (item.kind === 'file') {
+					let blob = item.getAsFile()
+					let reader = new FileReader()
+
+					reader.onloadend = () => {
+						this.$store.commit('cardState/setCustomImageData', reader.result)
+					}
+					reader.readAsDataURL(blob)
+				}
+			}
+		})
 	}
 }
 </script>

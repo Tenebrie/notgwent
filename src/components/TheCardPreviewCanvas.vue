@@ -271,32 +271,33 @@ export default {
 				})
 			}
 
-			if (state.cardName !== '') {
+			if (state.cardName !== '' || state.cardTitle !== '') {
 				this.renderImage(ctx, 'bg-name-modern')
-				if (state.cardTitle === '') {
-					this.renderCardText(ctx, {
-						text: state.cardName,
-						font: this.getFont('22px', state.cardName),
-						color: 'black',
-						targetX: 390,
-						targetY: 52,
-						lineHeight: 24,
-						maxWidth: 220,
-						maxHeight: 48,
-						verticalAlign: 'center',
-						horizontalAlign: 'right'
-					})
-				} else {
-					this.renderCardText(ctx, {
-						text: state.cardName,
-						font: this.getFont('22px', state.cardName),
-						color: 'black',
-						targetX: 390,
-						targetY: 64,
-						lineHeight: 24,
-						horizontalAlign: 'right'
-					})
-				}
+			}
+
+			if (state.cardName !== '' && state.cardTitle === '') {
+				this.renderCardText(ctx, {
+					text: state.cardName,
+					font: this.getFont('22px', state.cardName),
+					color: 'black',
+					targetX: 390,
+					targetY: 54,
+					lineHeight: 24,
+					maxWidth: 220,
+					maxHeight: 64,
+					verticalAlign: 'center',
+					horizontalAlign: 'right'
+				})
+			} else if (state.cardName !== '' && state.cardTitle !== '') {
+				this.renderCardText(ctx, {
+					text: state.cardName,
+					font: this.getFont('22px', state.cardName),
+					color: 'black',
+					targetX: 390,
+					targetY: 64,
+					lineHeight: 24,
+					horizontalAlign: 'right'
+				})
 			}
 
 			if (state.cardTitle !== '') {
@@ -445,7 +446,7 @@ export default {
 			let maxWidth = options.maxWidth || targetX * 2
 			let maxHeight = options.maxHeight || lineHeight
 			let horizontalAlign = options.horizontalAlign || 'center'
-			let verticalAlign = options.verticalAlign || 'bottom'
+			let verticalAlign = options.verticalAlign || 'center'
 
 			ctx.font = font
 			ctx.fillStyle = color
@@ -534,23 +535,20 @@ export default {
 				renderTargetX = targetX - width
 			}
 
-			const colorTagPairPattern = /<color=['"]?([a-zA-Z0-9#]+)['"]?>.+<\/color>$/g
-			const openingColorTagPattern = /<color=['"]?([a-zA-Z0-9#]+)['"]?>.+$/g
-			const invertedColorTagPairPattern = /<\/color>.+<color=['"]?([a-zA-Z0-9#]+)['"]?>$/g
-			const closingColorTagPattern = /.+<\/color>$/g
-			const firstClosingColorTagPattern = /<\/color>.+$/g
-			const lastOpeningColorTagPattern = /.+<color=['"]?([a-zA-Z0-9#]+)['"]?>$/g
-			const nakedOpeningColorTagPattern = /<color=['"]?([a-zA-Z0-9#]+)['"]?>$/g
-			const nakedClosingColorTagPattern = /<\/color>$/g
+			const colorTagPairPattern = /<(?:color|c)=['"]?([a-zA-Z0-9#]+)['"]?>.+<\/(?:color|c)>$/g
+			const openingColorTagPattern = /<(?:color|c)=['"]?([a-zA-Z0-9#]+)['"]?>.+$/g
+			const invertedColorTagPairPattern = /<\/(?:color|c)>.+<(?:color|c)=['"]?([a-zA-Z0-9#]+)['"]?>$/g
+			const closingColorTagPattern = /.+<\/(?:color|c)>$/g
+			const firstClosingColorTagPattern = /<\/(?:color|c)>.+$/g
+			const lastOpeningColorTagPattern = /.+<(?:color|c)=['"]?([a-zA-Z0-9#]+)['"]?>$/g
+			const nakedOpeningColorTagPattern = /<(?:color|c)=['"]?([a-zA-Z0-9#]+)['"]?>$/g
+			const nakedClosingColorTagPattern = /<\/(?:color|c)>$/g
 			let results
 			let currentLineX = renderTargetX
 
 			let words = text.split(' ')
-			//ctx.strokeStyle = 'black'
-			//ctx.lineWidth = 2
-			//ctx.miterLimit = 2
-			//ctx.lineJoin = 'round'
-			ctx.shadowBlur = 6
+			// ctx.shadowBlur = 6
+			// ctx.shadowColor = 'black'
 
 			while (words.length > 0) {
 				let word = words[0]
@@ -558,7 +556,6 @@ export default {
 				if (words.length > 1) {
 					cleanWord += ' '
 				}
-				//ctx.strokeText(cleanWord, currentLineX, targetY)
 
 				results = colorTagPairPattern.exec(word)
 				if (results !== null) {
@@ -663,7 +660,7 @@ export default {
 
 			let desiredAspectRatio = this.canvasWidth / this.canvasHeight
 			let croppedImageWidth = this.canvasWidth
-			let croppedImageHeight = image.height * (this.canvasWidth / image.width) // image.width / desiredAspectRatio;
+			let croppedImageHeight = image.height * (this.canvasWidth / image.width)
 			let verticalOffset = (croppedImageHeight - this.canvasHeight) / 2
 			let horizontalOffset = 0
 			if (image.width > image.height * desiredAspectRatio) {
