@@ -119,7 +119,6 @@ export default {
 
 		let updateCustomImageZoom = (delta) => {
 			delta = -Math.sign(delta) * 32
-			console.log(delta)
 			if (this.customArtZoom + delta >= 0) {
 				this.setCustomImageZoom(this.customArtZoom + delta)
 			}
@@ -649,7 +648,7 @@ export default {
 			ctx.fillStyle = defaultColor
 		},
 
-		preloadCustomArtwork: throttle(16, function() {
+		preloadCustomArtwork: throttle(8, function() {
 			if (!this.customArtworkBase64) {
 				this.customArtwork = null
 				return
@@ -657,13 +656,14 @@ export default {
 
 			let image = new Image()
 			image.onload = () => {
-				this.applyCardMask(image, (croppedImage) => { this.customArtwork = croppedImage })
+				this.customArtwork = this.applyCardMask(image)
 			}
 			image.src = this.customArtworkBase64
 		}),
 
-		applyCardMask: function(image, callback) {
+		applyCardMask: function(image) {
 			let canvas = document.createElement('canvas')
+
 			canvas.width = this.canvasWidth
 			canvas.height = this.canvasHeight
 			let ctx = canvas.getContext('2d')
@@ -684,15 +684,9 @@ export default {
 
 			horizontalOffset += this.customArtOffsetX
 			verticalOffset += this.customArtOffsetY
-			let imageZoom = this.customArtZoom
 
 			ctx.drawImage(image, -horizontalOffset, -verticalOffset, croppedImageWidth, croppedImageHeight)
-
-			let updatedImage = new Image()
-			updatedImage.onload = () => {
-				callback(updatedImage)
-			}
-			updatedImage.src = canvas.toDataURL('image/png')
+			return canvas
 		},
 
 		renderImage: function(ctx, imageId, options) {
