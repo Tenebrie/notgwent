@@ -132,10 +132,13 @@ export default {
 				y: mouseY
 			}
 		}
-		let applyMouseUpOffsetChange = (mouseX, mouseY) => {
+		let applyMouseUpOffsetChange = (event, canvas) => {
 			if (!this.mouseDownPosition) {
 				return
 			}
+
+			let mouseX = event.pageX - canvas.offsetLeft
+			let mouseY = event.pageY - canvas.offsetTop
 
 			let diff = {
 				x: mouseX - this.mouseDownPosition.x,
@@ -148,10 +151,10 @@ export default {
 		let resetMouseDownPosition = () => {
 			this.mouseDownPosition = null
 		}
-		canvas.addEventListener('mousedown', event => saveMouseDownPosition(event.offsetX, event.offsetY))
-		backCanvas.addEventListener('mousedown', event => saveMouseDownPosition(event.offsetX, event.offsetY))
-		canvas.addEventListener('mousemove', event => applyMouseUpOffsetChange(event.offsetX, event.offsetY))
-		backCanvas.addEventListener('mousemove', event => applyMouseUpOffsetChange(event.offsetX, event.offsetY))
+		canvas.addEventListener('mousedown', event => saveMouseDownPosition(event.pageX - canvas.offsetLeft, event.pageY - canvas.offsetTop))
+		backCanvas.addEventListener('mousedown', event => saveMouseDownPosition(event.pageX - backCanvas.offsetLeft, event.pageY - backCanvas.offsetTop))
+		canvas.addEventListener('mousemove', event => applyMouseUpOffsetChange(event, canvas))
+		backCanvas.addEventListener('mousemove', event => applyMouseUpOffsetChange(event, backCanvas))
 		canvas.addEventListener('mouseup', () => resetMouseDownPosition())
 		backCanvas.addEventListener('mouseup', () => resetMouseDownPosition())
 	},
@@ -252,13 +255,14 @@ export default {
 		}),
 
 		swapContext: function() {
+			this.previewContexts[this.activePreviewContext].canvas.style.opacity = '1'
 			this.previewContexts[this.activePreviewContext].canvas.style.display = 'block'
 			if (this.activePreviewContext === 0) {
 				this.activePreviewContext = 1
 			} else {
 				this.activePreviewContext = 0
 			}
-			this.previewContexts[this.activePreviewContext].canvas.style.display = 'none'
+			this.previewContexts[this.activePreviewContext].canvas.style.opacity = '0'
 		},
 
 		renderCanvasAfterDelay: function() {
@@ -733,6 +737,7 @@ export default {
 		margin-right: auto;
 		width: 408px;
 		canvas {
+			position: absolute;
 			display: block;
 			margin-left: auto;
 			margin-right: auto;
