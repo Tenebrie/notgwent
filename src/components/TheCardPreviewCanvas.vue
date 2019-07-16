@@ -6,9 +6,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import { getCardFileName, stripMarkup } from '../util/util'
 import { Event, Color, Type, AttackType } from '../util/constant'
+import { throttle } from 'throttle-debounce'
 
 export default {
 	data: function() {
@@ -21,7 +22,13 @@ export default {
 			cacheWaitingTimer: null,
 			canvasRenderDebounceTimer: null,
 
-			unsubscribeFromCardStore: () => {}
+			unsubscribeFromCardStore: () => {},
+
+			highlightEnabled: false,
+			currentColor: '',
+			colorStack: [],
+
+			mouseDownPosition: null
 		}
 	},
 
@@ -35,6 +42,7 @@ export default {
 		customArtworkBase64: function() { this.preloadCustomArtwork() },
 		customArtOffsetX: function() { this.preloadCustomArtwork() },
 		customArtOffsetY: function() { this.preloadCustomArtwork() },
+		customArtZoom: function() { this.preloadCustomArtwork() },
 
 		customArtwork: function() {
 			this.renderCanvasAfterDelay()
@@ -108,6 +116,45 @@ export default {
 		document.fonts.addEventListener('loadingdone', () => {
 			this.renderCanvasAfterDelay()
 		})
+
+		let updateCustomImageZoom = (delta) => {
+			delta = -Math.sign(delta) * 32
+			console.log(delta)
+			if (this.customArtZoom + delta >= 0) {
+				this.setCustomImageZoom(this.customArtZoom + delta)
+			}
+		}
+		canvas.addEventListener('wheel', event => updateCustomImageZoom(event.deltaY))
+		backCanvas.addEventListener('wheel', event => updateCustomImageZoom(event.deltaY))
+
+		let saveMouseDownPosition = (mouseX, mouseY) => {
+			this.mouseDownPosition = {
+				x: mouseX,
+				y: mouseY
+			}
+		}
+		let applyMouseUpOffsetChange = (mouseX, mouseY) => {
+			if (!this.mouseDownPosition) {
+				return
+			}
+
+			let diff = {
+				x: mouseX - this.mouseDownPosition.x,
+				y: mouseY - this.mouseDownPosition.y
+			}
+			this.setCustomImageOffsetX(this.customArtOffsetX - diff.x)
+			this.setCustomImageOffsetY(this.customArtOffsetY - diff.y)
+			saveMouseDownPosition(mouseX, mouseY)
+		}
+		let resetMouseDownPosition = () => {
+			this.mouseDownPosition = null
+		}
+		canvas.addEventListener('mousedown', event => saveMouseDownPosition(event.offsetX, event.offsetY))
+		backCanvas.addEventListener('mousedown', event => saveMouseDownPosition(event.offsetX, event.offsetY))
+		canvas.addEventListener('mousemove', event => applyMouseUpOffsetChange(event.offsetX, event.offsetY))
+		backCanvas.addEventListener('mousemove', event => applyMouseUpOffsetChange(event.offsetX, event.offsetY))
+		canvas.addEventListener('mouseup', () => resetMouseDownPosition())
+		backCanvas.addEventListener('mouseup', () => resetMouseDownPosition())
 	},
 
 	beforeDestroy: function() {
@@ -119,7 +166,8 @@ export default {
 	computed: {
 		...mapState({
 			customArtOffsetX: state => state.cardState.customImageOffsetX,
-			customArtOffsetY: state => state.cardState.customImageOffsetY
+			customArtOffsetY: state => state.cardState.customImageOffsetY,
+			customArtZoom: state => state.cardState.customImageZoom
 		}),
 
 		previewContext() {
@@ -139,10 +187,10 @@ export default {
 			return '408x584'
 		},
 		canvasWidth() {
-			return this.canvasSize.split('x')[0]
+			return parseInt(this.canvasSize.split('x')[0])
 		},
 		canvasHeight() {
-			return this.canvasSize.split('x')[1]
+			return parseInt(this.canvasSize.split('x')[1])
 		},
 		imageUrls() {
 			let urls = [
@@ -198,6 +246,12 @@ export default {
 		}
 	},
 	methods: {
+		...mapMutations({
+			setCustomImageOffsetX: 'cardState/setCustomImageOffsetX',
+			setCustomImageOffsetY: 'cardState/setCustomImageOffsetY',
+			setCustomImageZoom: 'cardState/setCustomImageZoom'
+		}),
+
 		swapContext: function() {
 			this.previewContexts[this.activePreviewContext].canvas.style.display = 'block'
 			if (this.activePreviewContext === 0) {
@@ -509,11 +563,12 @@ export default {
 				offset = (maximumLineY - currentLineY) - lineHeight
 			}
 
+			this.resetDescriptionColors(ctx, color)
+
 			for (let lineIndex in textLines) {
 				let line = textLines[lineIndex]
 				this.renderCardTextLine(ctx, {
 					text: line.text,
-					defaultColor: color,
 					targetX: line.targetX,
 					targetY: line.targetY + offset,
 					align: horizontalAlign
@@ -521,7 +576,7 @@ export default {
 			}
 		},
 
-		renderCardTextLine: function(ctx, { text, defaultColor, targetX, targetY, align }) {
+		renderCardTextLine: function(ctx, { text, targetX, targetY, align }) {
 			if (text === null) {
 				throw Error('Unable to render null text')
 			}
@@ -535,109 +590,66 @@ export default {
 				renderTargetX = targetX - width
 			}
 
-			const colorTagPairPattern = /<(?:color|c)=['"]?([a-zA-Z0-9#]+)['"]?>.+<\/(?:color|c)>$/g
-			const openingColorTagPattern = /<(?:color|c)=['"]?([a-zA-Z0-9#]+)['"]?>.+$/g
-			const invertedColorTagPairPattern = /<\/(?:color|c)>.+<(?:color|c)=['"]?([a-zA-Z0-9#]+)['"]?>$/g
-			const closingColorTagPattern = /.+<\/(?:color|c)>$/g
-			const firstClosingColorTagPattern = /<\/(?:color|c)>.+$/g
-			const lastOpeningColorTagPattern = /.+<(?:color|c)=['"]?([a-zA-Z0-9#]+)['"]?>$/g
-			const nakedOpeningColorTagPattern = /<(?:color|c)=['"]?([a-zA-Z0-9#]+)['"]?>$/g
-			const nakedClosingColorTagPattern = /<\/(?:color|c)>$/g
-			let results
+			const openingColorTagPattern = /<(?:color|c)=['"]?([a-zA-Z0-9#]+)['"]?>/
+			const closingColorTagPattern = /<\/(?:color|c)>/
+
 			let currentLineX = renderTargetX
 
-			let words = text.split(' ')
 			// ctx.shadowBlur = 6
 			// ctx.shadowColor = 'black'
 
-			while (words.length > 0) {
-				let word = words[0]
-				let cleanWord = stripMarkup(word)
-				if (words.length > 1) {
-					cleanWord += ' '
-				}
+			let buffer = ''
 
-				results = colorTagPairPattern.exec(word)
-				if (results !== null) {
-					ctx.fillStyle = results[1]
-					ctx.fillText(cleanWord, currentLineX, targetY)
-					ctx.fillStyle = defaultColor
-				}
-
-				if (results === null) {
-					results = invertedColorTagPairPattern.exec(word)
-					if (results !== null) {
-						ctx.fillStyle = defaultColor
-						ctx.fillText(cleanWord, currentLineX, targetY)
-						ctx.fillStyle = results[1]
+			for (let i = 0; i < text.length; i++) {
+				let char = text.charAt(i)
+				if (char === '<' || (char === '*')) {
+					this.renderDescriptionText(ctx, buffer, currentLineX, targetY)
+					currentLineX += ctx.measureText(buffer).width
+					buffer = ''
+					if (char === '*') {
+						this.highlightEnabled = !this.highlightEnabled
+					} else {
+						buffer += char
 					}
-				}
-
-				if (results === null) {
-					results = openingColorTagPattern.exec(word)
-					if (results !== null) {
-						ctx.fillStyle = results[1]
-						ctx.fillText(cleanWord, currentLineX, targetY)
+				} else if (char === '>') {
+					buffer += char
+					if (openingColorTagPattern.test(buffer)) {
+						this.setCurrentColor(ctx, buffer.match(openingColorTagPattern)[1])
+					} else if (closingColorTagPattern.test(buffer)) {
+						this.popColorStack(ctx)
 					}
+					buffer = ''
+				} else {
+					buffer += char
 				}
-
-				if (results === null) {
-					results = closingColorTagPattern.exec(word)
-					if (results !== null) {
-						ctx.fillText(cleanWord, currentLineX, targetY)
-						ctx.fillStyle = defaultColor
-					}
-				}
-
-				if (results === null) {
-					results = firstClosingColorTagPattern.exec(word)
-					if (results !== null) {
-						ctx.fillStyle = defaultColor
-						ctx.fillText(cleanWord, currentLineX, targetY)
-					}
-				}
-
-				if (results === null) {
-					results = lastOpeningColorTagPattern.exec(word)
-					if (results !== null) {
-						ctx.fillText(cleanWord, currentLineX, targetY)
-						ctx.fillStyle = results[1]
-					}
-				}
-
-				if (results === null) {
-					results = nakedOpeningColorTagPattern.exec(word)
-					if (results !== null) {
-						ctx.fillStyle = results[1]
-					}
-				}
-
-				if (results === null) {
-					results = nakedClosingColorTagPattern.exec(word)
-					if (results !== null) {
-						ctx.fillStyle = defaultColor
-					}
-				}
-
-				if (results === null) {
-					ctx.fillText(cleanWord, currentLineX, targetY)
-				}
-
-				words.splice(0, 1)
-				currentLineX += ctx.measureText(cleanWord).width
-
-				colorTagPairPattern.lastIndex = 0
-				openingColorTagPattern.lastIndex = 0
-				invertedColorTagPairPattern.lastIndex = 0
-				closingColorTagPattern.lastIndex = 0
-				firstClosingColorTagPattern.lastIndex = 0
-				lastOpeningColorTagPattern.lastIndex = 0
-				nakedOpeningColorTagPattern.lastIndex = 0
-				nakedClosingColorTagPattern.lastIndex = 0
 			}
+			this.renderDescriptionText(ctx, buffer, currentLineX, targetY)
 		},
 
-		preloadCustomArtwork: function() {
+		renderDescriptionText: function(ctx, text, targetX, targetY) {
+			if (this.highlightEnabled) { this.setCurrentColor(ctx, 'white') }
+			ctx.fillText(text, targetX, targetY)
+			if (this.highlightEnabled) { this.popColorStack(ctx) }
+		},
+
+		setCurrentColor: function(ctx, color) {
+			this.colorStack.push(this.currentColor)
+			this.currentColor = color
+			ctx.fillStyle = this.currentColor
+		},
+
+		popColorStack: function(ctx) {
+			this.currentColor = this.colorStack.pop()
+			ctx.fillStyle = this.currentColor
+		},
+
+		resetDescriptionColors: function(ctx, defaultColor) {
+			this.currentColor = defaultColor
+			this.highlightEnabled = false
+			ctx.fillStyle = defaultColor
+		},
+
+		preloadCustomArtwork: throttle(16, function() {
 			if (!this.customArtworkBase64) {
 				this.customArtwork = null
 				return
@@ -648,7 +660,7 @@ export default {
 				this.applyCardMask(image, (croppedImage) => { this.customArtwork = croppedImage })
 			}
 			image.src = this.customArtworkBase64
-		},
+		}),
 
 		applyCardMask: function(image, callback) {
 			let canvas = document.createElement('canvas')
@@ -659,19 +671,20 @@ export default {
 			ctx.globalCompositeOperation = 'source-atop'
 
 			let desiredAspectRatio = this.canvasWidth / this.canvasHeight
-			let croppedImageWidth = this.canvasWidth
-			let croppedImageHeight = image.height * (this.canvasWidth / image.width)
+			let croppedImageWidth = this.canvasWidth + this.customArtZoom
+			let croppedImageHeight = image.height * (croppedImageWidth / image.width)
 			let verticalOffset = (croppedImageHeight - this.canvasHeight) / 2
-			let horizontalOffset = 0
+			let horizontalOffset = this.customArtZoom / 2
 			if (image.width > image.height * desiredAspectRatio) {
-				croppedImageWidth = image.width * (this.canvasHeight / image.height)
-				croppedImageHeight = this.canvasHeight
+				croppedImageHeight = this.canvasHeight + this.customArtZoom
+				croppedImageWidth = image.width * (croppedImageHeight / image.height)
 				horizontalOffset = (croppedImageWidth - this.canvasWidth) / 2
-				verticalOffset = 0
+				verticalOffset = this.customArtZoom / 2
 			}
 
 			horizontalOffset += this.customArtOffsetX
 			verticalOffset += this.customArtOffsetY
+			let imageZoom = this.customArtZoom
 
 			ctx.drawImage(image, -horizontalOffset, -verticalOffset, croppedImageWidth, croppedImageHeight)
 
@@ -729,6 +742,7 @@ export default {
 			display: block;
 			margin-left: auto;
 			margin-right: auto;
+			cursor: grab;
 		}
 	}
 </style>

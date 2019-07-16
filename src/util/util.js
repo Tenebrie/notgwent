@@ -59,8 +59,8 @@ export const capitalize = function(str) {
 }
 
 export const stripMarkup = function(text) {
-	const htmlTagPattern = /<[^>]+>/g
-	return text.replace(htmlTagPattern, '')
+	const htmlTagPattern = /<[^>]*>/g
+	return text.replace(htmlTagPattern, '').replace(/\*/g, '')
 }
 
 export const saveAsFile = function(data, filename, type) {

@@ -58,7 +58,9 @@
 			],
 			"no-control-regex": [
 				"off"
-			]
+			],
+			"no-trailing-spaces": "off",
+			"no-unused-vars": "warn"
 		},
 		"parserOptions": {
 			"parser": "babel-eslint"

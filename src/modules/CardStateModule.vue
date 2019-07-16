@@ -26,7 +26,8 @@ export default {
 		attackType: AttackType.NORMAL,
 		customImageData: '',
 		customImageOffsetX: 0,
-		customImageOffsetY: 0
+		customImageOffsetY: 0,
+		customImageZoom: 0
 	},
 	mutations: {
 		load(state, value) {
@@ -53,6 +54,7 @@ export default {
 			state.customImageData = value.customImageData
 			state.customImageOffsetX = value.customImageOffsetX
 			state.customImageOffsetY = value.customImageOffsetY
+			state.customImageZoom = value.customImageZoom
 			if (state.cardType === Type.PRIME) {
 				state.cardType = Type.PAWN
 			}
@@ -84,6 +86,7 @@ export default {
 			state.customImageData = ''
 			state.customImageOffsetX = 0
 			state.customImageOffsetY = 0
+			state.customImageZoom = 0
 		},
 		setFreeBuild(state, value) {
 			state.isFreeBuild = value
@@ -152,10 +155,14 @@ export default {
 		setCustomImageOffsetY(state, value) {
 			state.customImageOffsetY = value
 		},
+		setCustomImageZoom(state, value) {
+			state.customImageZoom = value
+		},
 		clearCustomImageData(state) {
 			state.customImageData = ''
 			state.customImageOffsetX = 0
 			state.customImageOffsetY = 0
+			state.customImageZoom = 0
 		}
 	}
 }
