@@ -33,7 +33,7 @@ export const undoRedoPlugin = (store) => {
 	let firstState = JSON.parse(JSON.stringify(store.state))
 	undoRedoHistory.addState(firstState)
 
-	let addStateDebouncedFunction = debounce(100, (state) => {
+	let addStateDebouncedFunction = debounce(300, (state) => {
 		undoRedoHistory.addState(JSON.parse(JSON.stringify(state)))
 	})
 

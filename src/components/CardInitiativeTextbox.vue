@@ -1,5 +1,5 @@
 <template>
-	<base-textbox :value='initiative' @input='onInput' placeholder='50'>Initiative</base-textbox>
+	<base-textbox :value='initiative' @input='onInput' placeholder='10'>Initiative</base-textbox>
 </template>
 
 <script>
@@ -22,7 +22,7 @@ export default {
 
 		onInput: function(value) {
 			if (value.length > 0 && isNaN(value)) {
-				this.setInitiative(50)
+				this.setInitiative(10)
 				return
 			}
 

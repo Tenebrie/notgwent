@@ -16,7 +16,7 @@ export default {
 			return null
 		},
 		getCardsByName: state => name => {
-			return state.data.filter((obj) => obj.cardName === name)
+			return state.data.filter((obj) => stripMarkup(obj.cardName) === stripMarkup(name))
 		}
 	},
 	actions: {
@@ -49,11 +49,7 @@ export default {
 				item.displayName = stripMarkup(item.cardName)
 			}
 
-			if (item.cardDescription !== '') {
-				item.displayName += '. ' + stripMarkup(item.cardDescription)
-			}
-
-			let prefix = '[' + item.attack + '-' + item.health + '|' + item.initiative + ' ' + capitalize(item.cardType) + ']'
+			let prefix = '[' + item.attack + '/' + item.initiative + ' ' + capitalize(item.cardType) + ']'
 			item.displayName = prefix + ' ' + item.displayName
 
 			item.version = 0
@@ -65,6 +61,10 @@ export default {
 			}
 			if (item.version > 0) {
 				item.displayName += ' (v.' + (item.version + 1) + ')'
+			}
+
+			if (item.cardDescription !== '') {
+				item.displayName += ' | ' + stripMarkup(item.cardDescription.replace(/\n/g, ' ⏎ '))
 			}
 
 			item.id = uuidv4()

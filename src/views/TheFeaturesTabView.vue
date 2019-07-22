@@ -20,11 +20,6 @@
 				<card-attack-textbox />
 				<card-attack-range-dropdown />
 				<card-attack-type-dropdown />
-			</div>
-			<base-divider />
-			<card-budget-label :displayed-label="DisplayedBudgetLabel.HEALTH_COST" />
-			<div class="dropdowns">
-				<card-health-textbox />
 				<card-health-armor-dropdown />
 			</div>
 		</div>
@@ -42,16 +37,14 @@ import CardAttackTypeDropdown from '../components/CardAttackTypeDropdown'
 import CardTypeDropdown from '../components/CardTypeDropdown'
 import CardBudgetLabel from '../components/CardBudgetLabel'
 import CardAttackRangeDropdown from '../components/CardAttackRangeDropdown'
-import CardHealthArmorDropdown from '../components/CardHealthArmorDropdown'
 import { DisplayedBudgetLabel } from '../util/constant'
 import CardAttackTextbox from '../components/CardAttackTextbox'
-import CardHealthTextbox from '../components/CardHealthTextbox'
+import CardHealthArmorDropdown from '../components/CardHealthArmorDropdown'
 
 export default {
 	components: {
-		CardHealthTextbox,
-		CardAttackTextbox,
 		CardHealthArmorDropdown,
+		CardAttackTextbox,
 		CardAttackRangeDropdown,
 		BaseDivider,
 		CardBudgetLabel,

@@ -2,8 +2,7 @@
 	<div class="card-budget-label">
 		<span>
 			<i class="fas fa-coins"></i>
-			<span v-if="isDisplayingAttackCost"> Budget cost: {{ attackCost }}</span>
-			<span v-if="isDisplayingHealthCost"> Budget cost: {{ healthCost }}</span>
+			<span v-if="isDisplayingAttackCost"> Budget cost: {{ powerCost }}</span>
 			<span v-if="isDisplayingTribeCost"> Budget cost: {{ tribeCost }}</span>
 			<span v-if="isDisplayingDescriptionLabel"> Card effect budget: {{ budget }} / {{ maximumBudget }}</span>
 		</span>
@@ -26,68 +25,61 @@ export default {
 			attack: state => state.cardState.attack,
 			attackRange: state => state.cardState.attackRange,
 			attackType: state => state.cardState.attackType,
-			health: state => state.cardState.health,
 			healthArmor: state => state.cardState.healthArmor,
 			initiative: state => state.cardState.initiative,
-			tribe: state => state.cardState.cardTribe
+			tribe: state => state.cardState.cardTribe,
+			description: state => state.cardState.cardDescription
 		}),
 
 		isDisplayingAttackCost: function() { return this.displayedLabel === DisplayedBudgetLabel.ATTACK_COST },
-		isDisplayingHealthCost: function() { return this.displayedLabel === DisplayedBudgetLabel.HEALTH_COST },
 		isDisplayingTribeCost: function() { return this.displayedLabel === DisplayedBudgetLabel.TRIBE_COST },
 		isDisplayingDescriptionLabel: function() { return !this.displayedLabel || this.displayedLabel === DisplayedBudgetLabel.DESCRIPTION },
 
-		attackCost: function() {
-			let attackCost = 0
-			if (this.attack >= 0) {
-				attackCost = this.attack * Math.pow(1.2, (this.attackRange - 1))
+		powerCost: function() {
+			if (this.attack < 0) {
+				return 0
 			}
 
+			let powerCost
+			powerCost = this.attack * this.initiative
+			powerCost += (this.attackRange - 1) * 10
+			powerCost += this.healthArmor * 15
 			if (this.attackType === AttackType.HEALING) {
-				attackCost *= 1.5
-			} else {
-				attackCost *= 1 + (100 - this.initiative) * 0.015
+				powerCost += 5
 			}
-			return Math.round(attackCost)
-		},
-
-		healthCost: function() {
-			let healthCost = 0
-			if (this.health > 0) {
-				healthCost = this.health * Math.pow(1.5, this.healthArmor)
-			}
-			return Math.round(healthCost)
+			return Math.round(powerCost)
 		},
 
 		tribeCost: function() {
 			let tribeCost = 0
 			if (this.tribe.length > 0) {
-				tribeCost = this.tribe.split(';').length * 2
+				tribeCost = this.tribe.split(';').length * 5
 			}
 			return Math.round(tribeCost)
 		},
 
-		budget: function() {
-			let attackCost = this.attackCost
-			let healthCost = this.healthCost
-			let tribeCost = this.tribeCost
+		descriptionCost: function() {
+			let descriptionCost = 0
+			let costTagPattern = /<cost=([0-9\-.]+)[\s/]*>/g
 
-			let totalCost = attackCost + healthCost + tribeCost
+			let parsedCost = costTagPattern.exec(this.description)
+			while (parsedCost) {
+				descriptionCost += parseInt(parsedCost[1])
+				parsedCost = costTagPattern.exec(this.description)
+			}
+
+			return descriptionCost
+		},
+
+		budget: function() {
+			let totalCost = this.powerCost + this.tribeCost + this.descriptionCost
 			return this.maximumBudget - totalCost
 		},
 
 		maximumBudget: function() {
-			let baseBudget = 15
-			let initiativePerPoint = 10
-			if (this.type === Type.HERO) {
-				baseBudget = 20
-				initiativePerPoint = 8
-			}
-			if (this.type === Type.LEADER) {
-				baseBudget = 25
-				initiativePerPoint = 6
-			}
-			return baseBudget + Math.round(this.initiative / initiativePerPoint)
+			if (this.type === Type.LEADER) { return 200 }
+			if (this.type === Type.HERO) { return 150 }
+			return 120
 		}
 	},
 	methods: {

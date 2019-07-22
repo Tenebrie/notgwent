@@ -1,5 +1,5 @@
 <template>
-	<base-textbox :value='attack' @input='onInput' placeholder='1'>Attack</base-textbox>
+	<base-textbox :value='attack' @input='onInput' placeholder='1'>Power</base-textbox>
 </template>
 
 <script>
@@ -22,7 +22,8 @@ export default {
 
 		onInput: function(value) {
 			if (value.length > 0 && isNaN(value)) {
-				this.setAttack(50)
+				this.setAttack(-1)
+				this.setAttack(10)
 				return
 			}
 
@@ -31,7 +32,7 @@ export default {
 			}
 
 			let attack = parseInt(value)
-			let normalizedAttack = Math.max(1, Math.min(attack, 99))
+			let normalizedAttack = Math.max(1, Math.min(attack, 9999))
 			this.setAttack(-1)
 			this.setAttack(normalizedAttack)
 		}

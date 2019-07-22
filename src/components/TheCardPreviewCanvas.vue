@@ -126,16 +126,21 @@ export default {
 		canvas.addEventListener('wheel', event => updateCustomImageZoom(event.deltaY))
 		backCanvas.addEventListener('wheel', event => updateCustomImageZoom(event.deltaY))
 
-		let saveMouseDownPosition = (mouseX, mouseY) => {
+		let onMouseDown = (event) => {
+			if (event.button !== 0) { return }
+
+			let mouseX = event.pageX - canvas.offsetLeft
+			let mouseY = event.pageY - canvas.offsetTop
 			this.mouseDownPosition = {
 				x: mouseX,
 				y: mouseY
 			}
 		}
-		let applyMouseUpOffsetChange = (event, canvas) => {
+		let applyMouseUpOffsetChange = (event) => {
 			if (!this.mouseDownPosition) {
 				return
 			}
+			event.preventDefault()
 
 			let mouseX = event.pageX - canvas.offsetLeft
 			let mouseY = event.pageY - canvas.offsetTop
@@ -146,17 +151,18 @@ export default {
 			}
 			this.setCustomImageOffsetX(this.customArtOffsetX - diff.x)
 			this.setCustomImageOffsetY(this.customArtOffsetY - diff.y)
-			saveMouseDownPosition(mouseX, mouseY)
+			this.mouseDownPosition = {
+				x: mouseX,
+				y: mouseY
+			}
 		}
 		let resetMouseDownPosition = () => {
 			this.mouseDownPosition = null
 		}
-		canvas.addEventListener('mousedown', event => saveMouseDownPosition(event.pageX - canvas.offsetLeft, event.pageY - canvas.offsetTop))
-		backCanvas.addEventListener('mousedown', event => saveMouseDownPosition(event.pageX - backCanvas.offsetLeft, event.pageY - backCanvas.offsetTop))
-		canvas.addEventListener('mousemove', event => applyMouseUpOffsetChange(event, canvas))
-		backCanvas.addEventListener('mousemove', event => applyMouseUpOffsetChange(event, backCanvas))
-		canvas.addEventListener('mouseup', () => resetMouseDownPosition())
-		backCanvas.addEventListener('mouseup', () => resetMouseDownPosition())
+		canvas.addEventListener('mousedown', onMouseDown)
+		backCanvas.addEventListener('mousedown', onMouseDown)
+		window.addEventListener('mousemove', applyMouseUpOffsetChange)
+		window.addEventListener('mouseup', resetMouseDownPosition)
 	},
 
 	beforeDestroy: function() {
@@ -195,25 +201,14 @@ export default {
 			return parseInt(this.canvasSize.split('x')[1])
 		},
 		imageUrls() {
-			let urls = [
+			return [
 				'empty',
 				'bg-clean',
 				'bg-textured',
-				'bg-attribute',
-				'bg-name',
-				'bg-name-low',
 				'bg-name-modern',
 				'bg-initiative',
-				'bg-stats',
 				'bg-description',
-				'bg-tribe',
-				'bg-tribe-inverted',
 				'bg-tribe-modern',
-				'bg-path-begin',
-				'bg-path-normal',
-				'bg-path-fork',
-				'bg-path-stop',
-				'bg-path-end',
 				'bg-element-generic',
 				'bg-element-damage',
 				'bg-element-healing',
@@ -221,30 +216,14 @@ export default {
 				'bg-element-summoning',
 				'bg-element-control',
 				'bg-element-sacrifice',
-				'attr-freeBuild',
-				'attr-freeDraw',
-				'attr-freeMove',
-				'attr-freeBuildAndDraw',
-				'attr-freeDrawAndMove',
-				'attr-freeBuildAndMove',
-				'attr-freeBuildDrawAndMove',
-				'attr-permanent',
+				'bg-stats-left',
+				'bg-stats-right',
+				'bg-stats-middle',
 				'stat-attack-claw',
-				'stat-attack-ranged',
 				'stat-attack-heal',
-				'stat-defense-health',
-				'stat-defense-shield',
-				'stat-defense-shield2'
+				'stat-attack-range',
+				'stat-armor'
 			]
-
-			for (let i = 1; i <= 12; i++) {
-				urls.push('manacost-' + i)
-			}
-			for (let i = 5; i <= 50; i += 5) {
-				urls.push('goldcost-' + i)
-			}
-
-			return urls
 		}
 	},
 	methods: {
@@ -255,14 +234,14 @@ export default {
 		}),
 
 		swapContext: function() {
-			this.previewContexts[this.activePreviewContext].canvas.style.opacity = '1'
+			this.previewContexts[this.activePreviewContext].canvas.style['z-index'] = 10
 			this.previewContexts[this.activePreviewContext].canvas.style.display = 'block'
 			if (this.activePreviewContext === 0) {
 				this.activePreviewContext = 1
 			} else {
 				this.activePreviewContext = 0
 			}
-			this.previewContexts[this.activePreviewContext].canvas.style.opacity = '0'
+			this.previewContexts[this.activePreviewContext].canvas.style['z-index'] = 0
 		},
 
 		renderCanvasAfterDelay: function() {
@@ -283,6 +262,9 @@ export default {
 			}
 			let ctx = this.previewContext
 			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+			ctx.miterLimit = 2
+			ctx.lineJoin = 'round'
+			ctx.strokeStyle = 'black'
 
 			let imageCache = this.imageCache
 
@@ -321,10 +303,10 @@ export default {
 					font: this.getFont('18px', state.cardDescription),
 					color: Color.DEFAULT_CARD_TEXT,
 					targetX: realWidth / 2,
-					targetY: 420,
+					targetY: 392,
 					lineHeight: 24,
 					maxWidth: realWidth - 24,
-					maxHeight: 24 * 5
+					maxHeight: 24 * 6
 				})
 			}
 
@@ -388,84 +370,77 @@ export default {
 				}
 			}
 
-			if (state.attack >= 0 || state.health >= 0) {
-				this.renderImage(ctx, 'bg-stats')
-			}
-
-			if (state.attack >= 0) {
-				if (state.attackType === AttackType.NORMAL && state.attackRange === 1) {
-					this.renderImage(ctx, 'stat-attack-claw')
-				} else if (state.attackType === AttackType.NORMAL && state.attackRange > 1) {
-					this.renderImage(ctx, 'stat-attack-ranged')
-				} else if (state.attackType === AttackType.HEALING) {
-					this.renderImage(ctx, 'stat-attack-heal')
+			let currentStatsOffset = 0
+			if (state.attack > 0 || state.health >= 0) {
+				this.renderImage(ctx, 'bg-stats-right')
+				let offset = 2
+				if (state.attack > 0) {
+					ctx.font = '64px BrushScript'
+					offset += Math.round((ctx.measureText(state.attack.toString()).width) / 5)
 				}
-
 				if (state.attackRange !== 1) {
-					this.renderCardText(ctx, {
-						text: state.attackRange.toString(),
-						font: '18px BrushScript',
-						color: 'black',
-						targetX: 280,
-						targetY: 572,
-						lineHeight: 24
+					offset += 10
+				}
+				if (state.healthArmor > 0) {
+					offset += 12
+				}
+				for (let i = 0; i < offset; i++) {
+					this.renderImage(ctx, 'bg-stats-middle', {
+						horizontalOffset: -i * 5
 					})
 				}
+				this.renderImage(ctx, 'bg-stats-left', {
+					horizontalOffset: -offset * 5
+				})
+			}
 
-				if (state.attack < 10) {
-					this.renderCardText(ctx, {
-						text: state.attack.toString(),
-						font: '46px BrushScript',
-						color: 'black',
-						targetX: 302,
-						targetY: 568,
-						lineHeight: 24
-					})
-				} else {
-					this.renderCardText(ctx, {
-						text: state.attack.toString(),
-						font: '42px BrushScript',
-						color: 'black',
-						targetX: 304,
-						targetY: 568,
-						lineHeight: 24
-					})
-				}
+			if (state.healthArmor > 0) {
+				this.renderImage(ctx, 'stat-armor', { horizontalOffset: -currentStatsOffset * 5 })
+				this.renderCardText(ctx, {
+					text: state.healthArmor.toString(),
+					font: '22px BrushScript',
+					color: 'white',
+					targetX: 371 - currentStatsOffset * 5,
+					targetY: 557,
+					lineHeight: 24
+				})
+				currentStatsOffset += 12
 			}
-			if (state.health >= 0) {
-				if (state.healthArmor === 0) {
-					this.renderImage(ctx, 'stat-defense-health')
-				} else {
-					this.renderImage(ctx, 'stat-defense-shield')
-					this.renderCardText(ctx, {
-						text: state.healthArmor.toString(),
-						font: '18px BrushScript',
-						color: 'white',
-						targetX: 348,
-						targetY: 560,
-						lineHeight: 24
-					})
-				}
-				if (state.health < 10) {
-					this.renderCardText(ctx, {
-						text: state.health.toString(),
-						font: '46px BrushScript',
-						color: 'black',
-						targetX: 380,
-						targetY: 568,
-						lineHeight: 24
-					})
-				} else {
-					this.renderCardText(ctx, {
-						text: state.health.toString(),
-						font: '42px BrushScript',
-						color: 'black',
-						targetX: 382,
-						targetY: 568,
-						lineHeight: 24
-					})
-				}
+
+			if (state.attackRange !== 1) {
+				this.renderImage(ctx, 'stat-attack-range', { horizontalOffset: -currentStatsOffset * 5 })
+				this.renderCardText(ctx, {
+					text: state.attackRange.toString(),
+					font: '22px BrushScript',
+					color: 'white',
+					targetX: 368 - currentStatsOffset * 5,
+					targetY: 557,
+					lineHeight: 24
+				})
+				currentStatsOffset += 10
 			}
+
+			if (state.attack > 0) {
+				this.renderCardText(ctx, {
+					text: state.attack.toString(),
+					font: '64px BrushScript',
+					color: 'black',
+					targetX: 382 - currentStatsOffset * 5,
+					targetY: 572,
+					lineHeight: 24,
+					horizontalAlign: 'right'
+				})
+				let width = Math.round(ctx.measureText(state.attack.toString()).width)
+				width = Math.ceil(width / 5) * 5
+
+				if (state.attackType === AttackType.NORMAL) {
+					this.renderImage(ctx, 'stat-attack-claw', { horizontalOffset: -width - 10 - currentStatsOffset * 5 })
+				} else if (state.attackType === AttackType.HEALING) {
+					this.renderImage(ctx, 'stat-attack-heal', { horizontalOffset: -width - 10 - currentStatsOffset * 5 })
+				}
+				currentStatsOffset += Math.ceil(width / 5) * 5
+			}
+
 			if (state.initiative >= 1) {
 				this.renderImage(ctx, 'bg-initiative')
 				this.renderCardText(ctx, {
@@ -504,6 +479,7 @@ export default {
 			let maxHeight = options.maxHeight || lineHeight
 			let horizontalAlign = options.horizontalAlign || 'center'
 			let verticalAlign = options.verticalAlign || 'center'
+			let outline = options.outline || 0
 
 			ctx.font = font
 			ctx.fillStyle = color
@@ -574,12 +550,13 @@ export default {
 					text: line.text,
 					targetX: line.targetX,
 					targetY: line.targetY + offset,
-					align: horizontalAlign
+					align: horizontalAlign,
+					outline: outline
 				})
 			}
 		},
 
-		renderCardTextLine: function(ctx, { text, targetX, targetY, align }) {
+		renderCardTextLine: function(ctx, { text, targetX, targetY, align, outline }) {
 			if (text === null) {
 				throw Error('Unable to render null text')
 			}
@@ -606,7 +583,7 @@ export default {
 			for (let i = 0; i < text.length; i++) {
 				let char = text.charAt(i)
 				if (char === '<' || (char === '*')) {
-					this.renderDescriptionText(ctx, buffer, currentLineX, targetY)
+					this.renderDescriptionText(ctx, buffer, currentLineX, targetY, outline)
 					currentLineX += ctx.measureText(buffer).width
 					buffer = ''
 					if (char === '*') {
@@ -626,11 +603,15 @@ export default {
 					buffer += char
 				}
 			}
-			this.renderDescriptionText(ctx, buffer, currentLineX, targetY)
+			this.renderDescriptionText(ctx, buffer, currentLineX, targetY, outline)
 		},
 
-		renderDescriptionText: function(ctx, text, targetX, targetY) {
+		renderDescriptionText: function(ctx, text, targetX, targetY, outline) {
 			if (this.highlightEnabled) { this.setCurrentColor(ctx, 'white') }
+			if (outline) {
+				ctx.lineWidth = outline * 2
+				ctx.strokeText(text, targetX, targetY)
+			}
 			ctx.fillText(text, targetX, targetY)
 			if (this.highlightEnabled) { this.popColorStack(ctx) }
 		},

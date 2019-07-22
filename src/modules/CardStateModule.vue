@@ -18,11 +18,10 @@ export default {
 		cardGoldCost: 0,
 		cardManaCost: 0,
 
-		attack: 1,
+		attack: 5,
 		attackRange: 1,
-		health: 1,
 		healthArmor: 0,
-		initiative: 50,
+		initiative: 10,
 		attackType: AttackType.NORMAL,
 		customImageData: '',
 		customImageOffsetX: 0,
@@ -54,7 +53,7 @@ export default {
 			state.customImageData = value.customImageData
 			state.customImageOffsetX = value.customImageOffsetX
 			state.customImageOffsetY = value.customImageOffsetY
-			state.customImageZoom = value.customImageZoom
+			state.customImageZoom = value.customImageZoom || 0
 			if (state.cardType === Type.PRIME) {
 				state.cardType = Type.PAWN
 			}
@@ -77,11 +76,10 @@ export default {
 			state.cardGoldCost = 0
 			state.cardManaCost = 0
 
-			state.attack = 1
+			state.attack = 5
 			state.attackRange = 1
-			state.health = 1
 			state.healthArmor = 0
-			state.initiative = 50
+			state.initiative = 10
 			state.attackType = AttackType.NORMAL
 			state.customImageData = ''
 			state.customImageOffsetX = 0
@@ -133,9 +131,6 @@ export default {
 		},
 		setAttackRange(state, value) {
 			state.attackRange = value
-		},
-		setHealth(state, value) {
-			state.health = value
 		},
 		setHealthArmor(state, value) {
 			state.healthArmor = value
