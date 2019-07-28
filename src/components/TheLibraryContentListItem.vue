@@ -76,8 +76,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-	@import "@/styles/variables.scss";
-
 	.library-item {
 		width: 100%;
 		color: $inactive-color;
