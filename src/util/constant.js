@@ -25,27 +25,6 @@ export const Type = {
 	PAWN: 'pawn'
 }
 
-export const PathType = {
-	NORMAL: 'normal',
-	FORK: 'fork'
-}
-
-export const Element = {
-	GENERIC: 'generic',
-	DAMAGE: 'damage',
-	HEALING: 'healing',
-	ALTERATION: 'alteration',
-	SUMMONING: 'summoning',
-	CONTROL: 'control',
-	SACRIFICE: 'sacrifice'
-}
-
-export const Tribe = {
-	NONE: 'none',
-	BESTIAL: 'bestial',
-	DRACONIC: 'draconic'
-}
-
 export const ImportMethod = {
 	APPEND: 'append',
 	REPLACE: 'replace'

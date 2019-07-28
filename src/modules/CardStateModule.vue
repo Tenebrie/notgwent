@@ -1,22 +1,14 @@
 <script>
-import { AttackType, Element, PathType, Type } from '../util/constant'
+import { AttackType, Type } from '../util/constant'
 
 export default {
 	namespaced: true,
 	state: {
-		isFreeDraw: false,
-		isFreeBuild: false,
-		isFreeMove: false,
-		isPermanent: false,
 		cardName: '',
 		cardTitle: '',
 		cardDescription: '',
 		cardTribe: '',
 		cardType: Type.PAWN,
-		cardPathType: PathType.NORMAL,
-		cardElement: Element.GENERIC,
-		cardGoldCost: 0,
-		cardManaCost: 0,
 
 		attack: 5,
 		attackRange: 1,
@@ -34,15 +26,7 @@ export default {
 			state.cardTitle = value.cardTitle
 			state.cardDescription = value.cardDescription
 			state.cardTribe = value.cardTribe
-			state.isFreeDraw = value.isFreeDraw
-			state.isFreeBuild = value.isFreeBuild
-			state.isFreeMove = value.isFreeMove
-			state.isPermanent = value.isPermanent
 			state.cardType = value.cardType
-			state.cardPathType = value.cardPathType
-			state.cardElement = value.cardElement
-			state.cardGoldCost = value.cardGoldCost
-			state.cardManaCost = value.cardManaCost
 
 			state.attack = value.attack
 			if (value.attackRange) state.attackRange = value.attackRange
@@ -54,27 +38,13 @@ export default {
 			state.customImageOffsetX = value.customImageOffsetX
 			state.customImageOffsetY = value.customImageOffsetY
 			state.customImageZoom = value.customImageZoom || 0
-			if (state.cardType === Type.PRIME) {
-				state.cardType = Type.PAWN
-			}
-			if (state.cardElement !== Element.GENERIC) {
-				state.cardElement = Element.GENERIC
-			}
 		},
 		clear(state) {
 			state.cardName = ''
 			state.cardTitle = ''
 			state.cardDescription = ''
 			state.cardTribe = ''
-			state.isFreeDraw = false
-			state.isFreeBuild = false
-			state.isFreeMove = false
-			state.isPermanent = false
 			state.cardType = Type.PAWN
-			state.cardPathType = PathType.NORMAL
-			state.cardElement = Element.GENERIC
-			state.cardGoldCost = 0
-			state.cardManaCost = 0
 
 			state.attack = 5
 			state.attackRange = 1
@@ -85,18 +55,6 @@ export default {
 			state.customImageOffsetX = 0
 			state.customImageOffsetY = 0
 			state.customImageZoom = 0
-		},
-		setFreeBuild(state, value) {
-			state.isFreeBuild = value
-		},
-		setFreeDraw(state, value) {
-			state.isFreeDraw = value
-		},
-		setFreeMove(state, value) {
-			state.isFreeMove = value
-		},
-		setPermanent(state, value) {
-			state.isPermanent = value
 		},
 		setCardName(state, value) {
 			state.cardName = value
@@ -112,18 +70,6 @@ export default {
 		},
 		setCardType(state, value) {
 			state.cardType = value
-		},
-		setCardPathType(state, value) {
-			state.cardPathType = value
-		},
-		setCardElement(state, value) {
-			state.cardElement = value
-		},
-		setCardGoldCost(state, value) {
-			state.cardGoldCost = value
-		},
-		setCardManaCost(state, value) {
-			state.cardManaCost = value
 		},
 
 		setAttack(state, value) {
@@ -145,13 +91,34 @@ export default {
 			state.customImageData = value
 		},
 		setCustomImageOffsetX(state, value) {
-			state.customImageOffsetX = value
+			if (value.length > 0 && isNaN(value)) {
+				state.customImageOffsetX = 0
+				return
+			} else if (value.length === 0) {
+				return
+			}
+
+			state.customImageOffsetX = parseInt(value)
 		},
 		setCustomImageOffsetY(state, value) {
-			state.customImageOffsetY = value
+			if (value.length > 0 && isNaN(value)) {
+				state.customImageOffsetY = 0
+				return
+			} else if (value.length === 0) {
+				return
+			}
+
+			state.customImageOffsetY = parseInt(value)
 		},
 		setCustomImageZoom(state, value) {
-			state.customImageZoom = value
+			if (value.length > 0 && isNaN(value)) {
+				state.customImageZoom = 0
+				return
+			} else if (value.length === 0) {
+				return
+			}
+
+			state.customImageZoom = parseInt(value)
 		},
 		clearCustomImageData(state) {
 			state.customImageData = ''

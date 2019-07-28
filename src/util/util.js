@@ -13,18 +13,6 @@ export const debounce = function(func, wait, immediate) {
 	}
 }
 
-export const formatDate = function(date) {
-	let d = new Date(date)
-	let month = '' + (d.getMonth() + 1)
-	let day = '' + d.getDate()
-	let year = d.getFullYear()
-
-	if (month.length < 2) month = '0' + month
-	if (day.length < 2) day = '0' + day
-
-	return [day, month, year].join('.')
-}
-
 export const formatDateTime = function(date) {
 	let d = new Date(date)
 	let hours = '' + d.getHours()
@@ -87,19 +75,4 @@ export const getCardFileName = function(cardName, extension) {
 	formattedName = formattedName.replace(illegalNameCharacters, '')
 	formattedName = formattedName.trim()
 	return 'sw-' + formattedName + '.' + extension
-}
-
-export const getFibonacci = function(num) {
-	let a = 1
-	let b = 0
-	let temp
-
-	while (num >= 0) {
-		temp = a
-		a = a + b
-		b = temp
-		num--
-	}
-
-	return b
 }

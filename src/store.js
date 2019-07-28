@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 
 import cardStateModule from './modules/CardStateModule'
 import cardLibraryModule from './modules/CardLibraryModule'
-import cardArtworkModule from './modules/CardArtworkModule'
 import cardImporterModule from './modules/CardImporterModule'
 import { autosaverPlugin, undoRedoPlugin } from './util/plugins'
 
@@ -14,7 +13,6 @@ export default new Vuex.Store({
 	modules: {
 		cardState: cardStateModule,
 		cardLibrary: cardLibraryModule,
-		cardArtwork: cardArtworkModule,
 		cardImporter: cardImporterModule
 	},
 	plugins: [autosaverPlugin, undoRedoPlugin]

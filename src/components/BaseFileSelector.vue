@@ -1,5 +1,8 @@
 <template>
-	<input class="base-file-selector" type="file" :accept="fileType" @change="onFileSelected" />
+	<div class="base-file-selector">
+		<label><slot></slot></label>
+		<input type="file" :accept="fileType" @change="onFileSelected" />
+	</div>
 </template>
 
 <script>
@@ -18,5 +21,12 @@ export default {
 <style lang='scss' scoped>
 	.base-file-selector {
 		margin: 10px;
+
+		label {
+			font: 16px/1.4 "Roboto", sans-serif;
+			letter-spacing: 0.5px;
+			margin-left: 3px;
+		}
 	}
 </style>
+
