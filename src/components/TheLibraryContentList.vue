@@ -64,8 +64,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-	@import "@/styles/variables.scss";
-
 	.table-card-library {
 		display: flex;
 		flex-direction: column;

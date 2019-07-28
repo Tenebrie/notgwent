@@ -3,8 +3,6 @@
 </template>
 
 <style lang='scss' scoped>
-	@import "@/styles/variables.scss";
-
 	.divider {
 		background: rgba($inactive-color, 0.3);
 		height: 1px;

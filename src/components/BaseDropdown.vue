@@ -113,8 +113,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-	@import "@/styles/variables.scss";
-
 	.element-damage { color: $element-damage-color; }
 	.element-healing { color: $element-healing-color; }
 	.element-alteration { color: $element-alteration-color; }

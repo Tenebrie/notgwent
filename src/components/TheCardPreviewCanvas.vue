@@ -710,8 +710,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-	@import "@/styles/variables.scss";
-
 	.canvas-container {
 		height: 100%;
 		margin-left: auto;

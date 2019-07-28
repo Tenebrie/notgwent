@@ -30,8 +30,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-	@import "@/styles/variables.scss";
-
 	.checkbox-wrapper {
 		input[type='checkbox'] {
 			height: 0;
