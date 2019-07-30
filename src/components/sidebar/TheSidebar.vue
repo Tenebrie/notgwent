@@ -33,7 +33,7 @@ export default {
 	.sidebar {
 		margin-top: 50px;
 
-		button {
+		.base-button {
 			border: none;
 			min-width: 100%;
 			margin: 0;

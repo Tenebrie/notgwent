@@ -17,7 +17,7 @@ export default {
 			let reader = new FileReader()
 
 			reader.onloadend = () => {
-				this.emit('read', reader.result)
+				this.$emit('read', reader.result)
 			}
 			reader.readAsDataURL(file)
 		}

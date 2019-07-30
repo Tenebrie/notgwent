@@ -1,8 +1,10 @@
 <template>
 	<transition name="slide-fade" appear>
 		<div class="toolbar-tab tab-texts">
-			<reading-file-selector @read="setCustomImageData">Card artwork</reading-file-selector>
-			<base-button @click="clearCustomImageData" icon="fa-trash">Remove artwork</base-button>
+			<div class="add-remove">
+				<reading-file-selector @read="setCustomImageData"></reading-file-selector>
+				<base-button @click="clearCustomImageData" icon="fa-trash">Remove artwork</base-button>
+			</div>
 			<base-textbox :value='customImageOffsetX' @input='setCustomImageOffsetX' placeholder='0'>Horizontal offset</base-textbox>
 			<base-textbox :value='customImageOffsetY' @input='setCustomImageOffsetY' placeholder='0'>Vertical offset</base-textbox>
 			<base-textbox :value='customImageZoom' @input='setCustomImageZoom' placeholder='0'>Cropping</base-textbox>
@@ -42,5 +44,9 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-	.tab-texts {}
+	.tab-texts {
+		.add-remove {
+			display: flex;
+		}
+	}
 </style>

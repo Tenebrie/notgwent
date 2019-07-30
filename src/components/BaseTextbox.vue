@@ -1,8 +1,8 @@
 <template>
 	<div class='text-input'>
 		<label><slot></slot></label>
-		<input v-if='!multiline' class='card-title' type='text' v-model='text' :placeholder='placeholder' :readonly="readonly" @keydown="onKeyDown"/>
-		<textarea v-if='multiline' class='card-title' :rows='rows' v-model='text' :placeholder='placeholder' :readonly="readonly" @keydown="onKeyDown"></textarea>
+		<input v-if='!multiline' class='card-title' type='text' v-model='text' :placeholder='placeholder' :readonly="readonly" />
+		<textarea v-if='multiline' class='card-title' :rows='rows' v-model='text' :placeholder='placeholder' :readonly="readonly"></textarea>
 	</div>
 </template>
 
@@ -29,13 +29,6 @@ export default {
 		},
 		multiline() {
 			return this.rows !== undefined && this.rows > 1
-		}
-	},
-
-	methods: {
-		onKeyDown: function(event) {
-			if (event.ctrlKey && (event.key === 'z' || event.key === 'y')) {
-			}
 		}
 	}
 }

@@ -1,23 +1,23 @@
 <template>
 	<transition name="slide-fade" appear>
 		<div class="toolbar-tab tab-features">
-			<card-name></card-name>
-			<features-card-title-textbox />
+			<base-textbox :value='cardName' @input='setCardName' placeholder='Name'>Card name</base-textbox>
+			<base-textbox :value='cardTitle' @input='setCardTitle' placeholder='Title'>Card title</base-textbox>
 			<base-divider />
 			<card-budget-label :displayed-label="DisplayedBudgetLabel.TRIBE_COST" />
-			<card-tribe></card-tribe>
+			<base-textbox :value='cardTribe' @input='setCardTribe' placeholder='Tribe'>Card tribes</base-textbox>
 			<base-divider />
 			<card-budget-label />
-			<card-description></card-description>
+			<base-textbox :value='cardDescription' @input='setCardDescription' :rows='6' placeholder="A description of the card's effect">Card description</base-textbox>
 			<base-divider />
 			<div class="dropdowns">
 				<card-type-dropdown />
-				<card-initiative-textbox />
+				<base-textbox :value='cardInitiative' @input='setCardInitiative' placeholder='10'>Initiative</base-textbox>
 			</div>
 			<base-divider />
 			<card-budget-label :displayed-label="DisplayedBudgetLabel.ATTACK_COST" />
 			<div class="dropdowns">
-				<card-attack-textbox />
+				<base-textbox :value='cardPower' @input='setCardPower' placeholder='5'>Power</base-textbox>
 				<card-attack-range-dropdown />
 				<card-attack-type-dropdown />
 				<card-health-armor-dropdown />
@@ -27,38 +27,49 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
+import BaseTextbox from '../components/BaseTextbox'
 import BaseDivider from '../components/BaseDivider'
-import cardName from '../components/FeaturesCardNameTextbox.vue'
-import cardTribe from '../components/FeaturesCardTribeTextbox.vue'
-import cardDescription from '../components/FeaturesCardDescriptionTextbox.vue'
-import CardInitiativeTextbox from '../components/CardInitiativeTextbox'
-import FeaturesCardTitleTextbox from '../components/FeaturesCardTitleTextbox'
-import CardAttackTypeDropdown from '../components/CardAttackTypeDropdown'
-import CardTypeDropdown from '../components/CardTypeDropdown'
-import CardBudgetLabel from '../components/CardBudgetLabel'
-import CardAttackRangeDropdown from '../components/CardAttackRangeDropdown'
 import { DisplayedBudgetLabel } from '../util/constant'
-import CardAttackTextbox from '../components/CardAttackTextbox'
+import CardBudgetLabel from '../components/CardBudgetLabel'
+import CardTypeDropdown from '../components/CardTypeDropdown'
+import CardAttackTypeDropdown from '../components/CardAttackTypeDropdown'
+import CardAttackRangeDropdown from '../components/CardAttackRangeDropdown'
 import CardHealthArmorDropdown from '../components/CardHealthArmorDropdown'
 
 export default {
 	components: {
-		CardHealthArmorDropdown,
-		CardAttackTextbox,
-		CardAttackRangeDropdown,
+		BaseTextbox,
 		BaseDivider,
 		CardBudgetLabel,
 		CardTypeDropdown,
 		CardAttackTypeDropdown,
-		FeaturesCardTitleTextbox,
-		CardInitiativeTextbox,
-		cardName,
-		cardDescription,
-		cardTribe
+		CardAttackRangeDropdown,
+		CardHealthArmorDropdown
 	},
 
 	computed: {
+		...mapState({
+			cardName: state => state.cardState.cardName,
+			cardTitle: state => state.cardState.cardTitle,
+			cardTribe: state => state.cardState.cardTribe,
+			cardDescription: state => state.cardState.cardDescription,
+			cardPower: state => state.cardState.attack,
+			cardInitiative: state => state.cardState.initiative
+		}),
+
 		DisplayedBudgetLabel: function() { return DisplayedBudgetLabel }
+	},
+
+	methods: {
+		...mapMutations({
+			setCardName: 'cardState/setCardName',
+			setCardTitle: 'cardState/setCardTitle',
+			setCardTribe: 'cardState/setCardTribe',
+			setCardDescription: 'cardState/setCardDescription',
+			setCardPower: 'cardState/setAttack',
+			setCardInitiative: 'cardState/setInitiative'
+		})
 	}
 }
 </script>

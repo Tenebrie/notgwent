@@ -1,7 +1,7 @@
 <script>
-import { AttackType, Type } from '../util/constant'
+	import { AttackType, Type } from '../util/constant'
 
-export default {
+	export default {
 	namespaced: true,
 	state: {
 		cardName: '',
@@ -73,7 +73,15 @@ export default {
 		},
 
 		setAttack(state, value) {
-			state.attack = value
+			if (value.length > 0 && isNaN(value)) {
+				state.attack = 5
+				return
+			} else if (value.length === 0) {
+				return
+			}
+
+			let attack = parseInt(value)
+			state.attack = Math.max(1, Math.min(attack, 99))
 		},
 		setAttackRange(state, value) {
 			state.attackRange = value
@@ -82,7 +90,15 @@ export default {
 			state.healthArmor = value
 		},
 		setInitiative(state, value) {
-			state.initiative = value
+			if (value.length > 0 && isNaN(value)) {
+				state.initiative = 10
+				return
+			} else if (value.length === 0) {
+				return
+			}
+
+			let initiative = parseInt(value)
+			state.initiative = Math.max(1, Math.min(initiative, 99))
 		},
 		setAttackType(state, value) {
 			state.attackType = value

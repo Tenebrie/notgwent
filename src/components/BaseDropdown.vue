@@ -2,13 +2,13 @@
 	<div class="dropdown-wrapper">
 		<label><slot></slot></label>
 		<div class="card-drop">
-			<button @click='onTopClick' class='button-top'>
+			<base-button @click='onTopClick' class='button-top'>
 				<i :class='getIconClass(activeItem)'></i>&nbsp;<span class='label-active'>{{ activeItem.title }} </span>
 				<span class='caret-down'>&nbsp;<i class="fas fa-caret-down"></i>&nbsp;</span>
-			</button>
+			</base-button>
 			<ul>
 				<li v-for='item in items' :key="item.value" :class="item === activeItem ? 'active' : '' ">
-					<button @click='onItemClick(item)'><i :class='getIconClass(item)'></i> {{ item.title }}</button>
+					<base-button @click='onItemClick(item)'><i :class='getIconClass(item)'></i> {{ item.title }}</base-button>
 				</li>
 			</ul>
 		</div>
@@ -16,7 +16,9 @@
 </template>
 
 <script>
+import BaseButton from './BaseButton'
 export default {
+	components: { BaseButton },
 	props: ['id', 'items', 'selectedValue', 'onSelect', 'zIndex'],
 	data: function() {
 		return {
@@ -135,7 +137,7 @@ export default {
 			position: relative;
 			margin-top: 5px;
 
-			button {
+			.base-button {
 				display: block;
 				width: 100%;
 				height: $dropdown-element-height;
@@ -205,7 +207,7 @@ export default {
 					width: 100%;
 					transition: top $transition-duration ease-out;
 
-					button {
+					.base-button {
 						&:active {
 							color: $accent-color;
 							transition: all 0s;
@@ -213,12 +215,12 @@ export default {
 					}
 
 					&.active {
-						button {
+						.base-button {
 							color: $accent-color;
 						}
 					}
 					&.closed {
-						button:hover {
+						.base-button:hover {
 							cursor: default;
 							background-color: $dropdown-background-color;
 						}

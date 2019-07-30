@@ -1,11 +1,13 @@
 <template>
 	<div class='sidebar-toggle'>
-		<button @click='onClick' :class="isOpen ? 'expanded' : ''"><i class='fas fa-bars'></i></button>
+		<base-button @click='onClick' :class="isOpen ? 'expanded' : ''"><i class='fas fa-bars'></i></base-button>
 	</div>
 </template>
 
 <script>
+import BaseButton from '../BaseButton'
 export default {
+	components: { BaseButton },
 	props: ['onClick', 'isOpen']
 }
 </script>
@@ -19,7 +21,7 @@ export default {
 		background-color: $smoke-screen-color;
 		transition: all $long-transition-duration ease;
 
-		button {
+		.base-button {
 			font-size: 16px;
 			margin: 0;
 			border: none;
