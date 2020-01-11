@@ -22,7 +22,8 @@ export const Type = {
 
 	LEADER: 'leader',
 	HERO: 'hero',
-	PAWN: 'pawn'
+	PAWN: 'pawn',
+	SPELL: 'spell'
 }
 
 export const ImportMethod = {

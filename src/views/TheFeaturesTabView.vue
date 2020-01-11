@@ -17,7 +17,8 @@
 			<base-divider />
 			<card-budget-label :displayed-label="DisplayedBudgetLabel.ATTACK_COST" />
 			<div class="dropdowns">
-				<base-textbox :value='cardPower' @input='setCardPower' placeholder='5'>Power</base-textbox>
+				<base-textbox :value='cardAttack' @input='setCardAttack' placeholder='5'>Attack</base-textbox>
+				<base-textbox :value='cardHealth' @input='setCardHealth' placeholder='5'>Health</base-textbox>
 				<card-attack-range-dropdown />
 				<card-attack-type-dropdown />
 				<card-health-armor-dropdown />
@@ -54,7 +55,8 @@ export default {
 			cardTitle: state => state.cardState.cardTitle,
 			cardTribe: state => state.cardState.cardTribe,
 			cardDescription: state => state.cardState.cardDescription,
-			cardPower: state => state.cardState.attack,
+			cardAttack: state => state.cardState.attack,
+			cardHealth: state => state.cardState.health,
 			cardInitiative: state => state.cardState.initiative
 		}),
 
@@ -67,7 +69,8 @@ export default {
 			setCardTitle: 'cardState/setCardTitle',
 			setCardTribe: 'cardState/setCardTribe',
 			setCardDescription: 'cardState/setCardDescription',
-			setCardPower: 'cardState/setAttack',
+			setCardAttack: 'cardState/setAttack',
+			setCardHealth: 'cardState/setHealth',
 			setCardInitiative: 'cardState/setInitiative'
 		})
 	}

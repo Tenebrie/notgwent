@@ -40,6 +40,11 @@ export default {
 					title: 'Pawn',
 					icon: 'fa-chess-pawn',
 					value: Type.PAWN
+				},
+				{
+					title: 'Spell',
+					icon: 'fa-chess-rook',
+					value: Type.SPELL
 				}
 			]
 		}

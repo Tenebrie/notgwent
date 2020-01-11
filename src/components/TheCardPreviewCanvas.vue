@@ -222,6 +222,7 @@ export default {
 				'stat-attack-claw',
 				'stat-attack-heal',
 				'stat-attack-range',
+				'stat-health',
 				'stat-armor'
 			]
 		}
@@ -370,16 +371,23 @@ export default {
 				}
 			}
 
+			const isUnit = state.cardType === Type.HERO || state.cardType === Type.LEADER || state.cardType === Type.PAWN
 			let currentStatsOffset = 0
-			if (state.attack > 0 || state.health >= 0) {
+			if (isUnit && (state.attack > 0 || state.health > 0)) {
 				this.renderImage(ctx, 'bg-stats-right')
 				let offset = 2
 				if (state.attack > 0) {
 					ctx.font = '64px BrushScript'
 					offset += Math.round((ctx.measureText(state.attack.toString()).width) / 5)
 				}
+				if (state.health > 0) {
+					offset += Math.round((ctx.measureText(state.health.toString()).width) / 5) + 12
+				}
 				if (state.attackRange !== 1) {
 					offset += 10
+				}
+				if (state.attackType === AttackType.HEALING) {
+					offset += 1
 				}
 				if (state.healthArmor > 0) {
 					offset += 12
@@ -394,7 +402,7 @@ export default {
 				})
 			}
 
-			if (state.healthArmor > 0) {
+			if (isUnit && state.healthArmor > 0) {
 				this.renderImage(ctx, 'stat-armor', { horizontalOffset: -currentStatsOffset * 5 })
 				this.renderCardText(ctx, {
 					text: state.healthArmor.toString(),
@@ -407,7 +415,7 @@ export default {
 				currentStatsOffset += 12
 			}
 
-			if (state.attackRange !== 1) {
+			if (isUnit && state.attackRange !== 1) {
 				this.renderImage(ctx, 'stat-attack-range', { horizontalOffset: -currentStatsOffset * 5 })
 				this.renderCardText(ctx, {
 					text: state.attackRange.toString(),
@@ -420,7 +428,24 @@ export default {
 				currentStatsOffset += 10
 			}
 
-			if (state.attack > 0) {
+			if (isUnit && state.health > 0) {
+				this.renderCardText(ctx, {
+					text: state.health.toString(),
+					font: '64px BrushScript',
+					color: 'black',
+					targetX: 382 - currentStatsOffset * 5,
+					targetY: 572,
+					lineHeight: 24,
+					horizontalAlign: 'right'
+				})
+				let width = Math.round(ctx.measureText(state.health.toString()).width)
+				width = Math.ceil(width / 5) * 5
+
+				this.renderImage(ctx, 'stat-armor', { horizontalOffset: -width - 10 - currentStatsOffset * 5 })
+				currentStatsOffset += width / 5 + 12
+			}
+
+			if (isUnit && state.attack > 0) {
 				this.renderCardText(ctx, {
 					text: state.attack.toString(),
 					font: '64px BrushScript',
@@ -438,10 +463,10 @@ export default {
 				} else if (state.attackType === AttackType.HEALING) {
 					this.renderImage(ctx, 'stat-attack-heal', { horizontalOffset: -width - 10 - currentStatsOffset * 5 })
 				}
-				currentStatsOffset += Math.ceil(width / 5) * 5
+				currentStatsOffset += width / 5
 			}
 
-			if (state.initiative >= 1) {
+			if (isUnit && state.initiative >= 1) {
 				this.renderImage(ctx, 'bg-initiative')
 				this.renderCardText(ctx, {
 					text: state.initiative.toString(),

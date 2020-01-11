@@ -1,7 +1,7 @@
 <script>
-	import { AttackType, Type } from '../util/constant'
+import { AttackType, Type } from '../util/constant'
 
-	export default {
+export default {
 	namespaced: true,
 	state: {
 		cardName: '',
@@ -11,9 +11,10 @@
 		cardType: Type.PAWN,
 
 		attack: 5,
+		health: 5,
 		attackRange: 1,
 		healthArmor: 0,
-		initiative: 10,
+		initiative: 5,
 		attackType: AttackType.NORMAL,
 		customImageData: '',
 		customImageOffsetX: 0,
@@ -82,6 +83,17 @@
 
 			let attack = parseInt(value)
 			state.attack = Math.max(1, Math.min(attack, 99))
+		},
+		setHealth(state, value) {
+			if (value.length > 0 && isNaN(value)) {
+				state.attack = 5
+				return
+			} else if (value.length === 0) {
+				return
+			}
+
+			let health = parseInt(value)
+			state.health = Math.max(1, Math.min(health, 99))
 		},
 		setAttackRange(state, value) {
 			state.attackRange = value
