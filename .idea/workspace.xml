@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="899d0b9b-309f-4cf2-8190-77465e5061df" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/public/resources/safety+security+shield+icon-1320166320946585917.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/resources/stat-health.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Tianara.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Tianara.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CardTypeDropdown.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CardTypeDropdown.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CardBudgetLabel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CardBudgetLabel.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/TheCardPreviewCanvas.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TheCardPreviewCanvas.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/modules/CardStateModule.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/CardStateModule.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/constant.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/constant.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/TheFeaturesTabView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/TheFeaturesTabView.vue" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -103,6 +99,7 @@
       <workItem from="1565417804006" duration="4366000" />
       <workItem from="1566064849521" duration="606000" />
       <workItem from="1578741194920" duration="3511000" />
+      <workItem from="1579022995234" duration="1862000" />
     </task>
     <servers />
   </component>
@@ -114,7 +111,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

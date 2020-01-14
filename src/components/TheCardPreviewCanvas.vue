@@ -295,6 +295,8 @@ export default {
 				this.renderImage(ctx, 'bg-element-healing')
 			} else if (state.cardType === Type.LEADER) {
 				this.renderImage(ctx, 'bg-element-summoning')
+			} else if (state.cardType === Type.SPELL) {
+				this.renderImage(ctx, 'bg-element-control')
 			}
 
 			if (state.cardDescription !== '') {
@@ -373,15 +375,12 @@ export default {
 
 			const isUnit = state.cardType === Type.HERO || state.cardType === Type.LEADER || state.cardType === Type.PAWN
 			let currentStatsOffset = 0
-			if (isUnit && (state.attack > 0 || state.health > 0)) {
+			if (isUnit) {
 				this.renderImage(ctx, 'bg-stats-right')
 				let offset = 2
-				if (state.attack > 0) {
+				if (state.attack >= 0) {
 					ctx.font = '64px BrushScript'
 					offset += Math.round((ctx.measureText(state.attack.toString()).width) / 5)
-				}
-				if (state.health > 0) {
-					offset += Math.round((ctx.measureText(state.health.toString()).width) / 5) + 12
 				}
 				if (state.attackRange !== 1) {
 					offset += 10
@@ -390,7 +389,7 @@ export default {
 					offset += 1
 				}
 				if (state.healthArmor > 0) {
-					offset += 12
+					offset += 10
 				}
 				for (let i = 0; i < offset; i++) {
 					this.renderImage(ctx, 'bg-stats-middle', {
@@ -412,7 +411,7 @@ export default {
 					targetY: 557,
 					lineHeight: 24
 				})
-				currentStatsOffset += 12
+				currentStatsOffset += 10
 			}
 
 			if (isUnit && state.attackRange !== 1) {
@@ -428,24 +427,7 @@ export default {
 				currentStatsOffset += 10
 			}
 
-			if (isUnit && state.health > 0) {
-				this.renderCardText(ctx, {
-					text: state.health.toString(),
-					font: '64px BrushScript',
-					color: 'black',
-					targetX: 382 - currentStatsOffset * 5,
-					targetY: 572,
-					lineHeight: 24,
-					horizontalAlign: 'right'
-				})
-				let width = Math.round(ctx.measureText(state.health.toString()).width)
-				width = Math.ceil(width / 5) * 5
-
-				this.renderImage(ctx, 'stat-armor', { horizontalOffset: -width - 10 - currentStatsOffset * 5 })
-				currentStatsOffset += width / 5 + 12
-			}
-
-			if (isUnit && state.attack > 0) {
+			if (isUnit && state.attack >= 0) {
 				this.renderCardText(ctx, {
 					text: state.attack.toString(),
 					font: '64px BrushScript',
@@ -466,10 +448,10 @@ export default {
 				currentStatsOffset += width / 5
 			}
 
-			if (isUnit && state.initiative >= 1) {
+			if (isUnit && state.power >= 1) {
 				this.renderImage(ctx, 'bg-initiative')
 				this.renderCardText(ctx, {
-					text: state.initiative.toString(),
+					text: state.power.toString(),
 					font: '70px BrushScript',
 					color: 'black',
 					targetX: 58,

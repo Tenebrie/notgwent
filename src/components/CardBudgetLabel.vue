@@ -11,7 +11,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { AttackType, DisplayedBudgetLabel, Type } from '../util/constant'
+import { DisplayedBudgetLabel, Type } from '../util/constant'
 
 export default {
 	props: {
@@ -22,6 +22,7 @@ export default {
 	computed: {
 		...mapState({
 			type: state => state.cardState.cardType,
+			power: state => state.cardState.power,
 			attack: state => state.cardState.attack,
 			attackRange: state => state.cardState.attackRange,
 			attackType: state => state.cardState.attackType,
@@ -36,24 +37,17 @@ export default {
 		isDisplayingDescriptionLabel: function() { return !this.displayedLabel || this.displayedLabel === DisplayedBudgetLabel.DESCRIPTION },
 
 		powerCost: function() {
-			if (this.attack < 0) {
-				return 0
-			}
-
-			let powerCost
-			powerCost = this.attack * this.initiative
-			powerCost += (this.attackRange - 1) * 10
-			powerCost += this.healthArmor * 15
-			if (this.attackType === AttackType.HEALING) {
-				powerCost += 5
-			}
+			let powerCost = this.power
+			powerCost += this.attack * 5
+			powerCost += (this.attackRange - 1) * 5
+			powerCost += this.healthArmor * 5
 			return Math.round(powerCost)
 		},
 
 		tribeCost: function() {
 			let tribeCost = 0
 			if (this.tribe.length > 0) {
-				tribeCost = this.tribe.split(';').length * 5
+				tribeCost = Math.floor(this.tribe.split(';').length * 2.5)
 			}
 			return Math.round(tribeCost)
 		},
@@ -77,9 +71,9 @@ export default {
 		},
 
 		maximumBudget: function() {
-			if (this.type === Type.LEADER) { return 200 }
-			if (this.type === Type.HERO) { return 150 }
-			return 120
+			if (this.type === Type.LEADER) { return 150 }
+			if (this.type === Type.HERO) { return 100 }
+			return 75
 		}
 	},
 	methods: {

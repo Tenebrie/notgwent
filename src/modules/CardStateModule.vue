@@ -10,6 +10,7 @@ export default {
 		cardTribe: '',
 		cardType: Type.PAWN,
 
+		power: 10,
 		attack: 5,
 		health: 5,
 		attackRange: 1,
@@ -29,10 +30,11 @@ export default {
 			state.cardTribe = value.cardTribe
 			state.cardType = value.cardType
 
+			state.power = value.power || 10
 			state.attack = value.attack
-			if (value.attackRange) state.attackRange = value.attackRange
 			state.health = value.health
-			if (value.healthArmor) state.healthArmor = value.healthArmor
+			state.attackRange = value.attackRange
+			state.healthArmor = value.healthArmor
 			state.initiative = value.initiative
 			state.attackType = value.attackType
 			state.customImageData = value.customImageData
@@ -47,7 +49,9 @@ export default {
 			state.cardTribe = ''
 			state.cardType = Type.PAWN
 
+			state.power = 5
 			state.attack = 5
+			state.health = 5
 			state.attackRange = 1
 			state.healthArmor = 0
 			state.initiative = 10
@@ -73,6 +77,17 @@ export default {
 			state.cardType = value
 		},
 
+		setPower(state, value) {
+			if (value.length > 0 && isNaN(value)) {
+				state.power = 10
+				return
+			} else if (value.length === 0) {
+				return
+			}
+
+			let power = parseInt(value)
+			state.power = Math.max(1, Math.min(power, 99))
+		},
 		setAttack(state, value) {
 			if (value.length > 0 && isNaN(value)) {
 				state.attack = 5
@@ -82,7 +97,7 @@ export default {
 			}
 
 			let attack = parseInt(value)
-			state.attack = Math.max(1, Math.min(attack, 99))
+			state.attack = Math.max(0, Math.min(attack, 99))
 		},
 		setHealth(state, value) {
 			if (value.length > 0 && isNaN(value)) {
