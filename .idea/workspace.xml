@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="899d0b9b-309f-4cf2-8190-77465e5061df" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/components/TheEditorModeDropdown.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CardBudgetLabel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CardBudgetLabel.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/TheCardPreviewCanvas.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TheCardPreviewCanvas.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/CardStateModule.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/CardStateModule.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/TheFeaturesTabView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/TheFeaturesTabView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TheLibraryExporter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TheLibraryExporter.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/CardImporterModule.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/CardImporterModule.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/constant.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/constant.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,7 +34,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="HTML" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -47,13 +48,14 @@
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.1.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="W:\Workspace\notgwent\src\components" />
-      <recent name="W:\Workspace\notgwent\src\modules" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="W:\Workspace\notgwent\src\components" />
       <recent name="W:\Workspace\notgwent\src\components\sidebar" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="W:\Workspace\notgwent\editor\src\components" />
+      <recent name="W:\Workspace\notgwent\src\components" />
+      <recent name="W:\Workspace\notgwent\src\modules" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -99,7 +101,8 @@
       <workItem from="1565417804006" duration="4366000" />
       <workItem from="1566064849521" duration="606000" />
       <workItem from="1578741194920" duration="3511000" />
-      <workItem from="1579022995234" duration="1862000" />
+      <workItem from="1579022995234" duration="2191000" />
+      <workItem from="1579095836370" duration="5520000" />
     </task>
     <servers />
   </component>

@@ -31,6 +31,11 @@ export const ImportMethod = {
 	REPLACE: 'replace'
 }
 
+export const EditorMode = {
+	PROTOTYPE: 'prototype',
+	PRODUCTION: 'production'
+}
+
 export const AttackType = {
 	NORMAL: 'normal',
 	HEALING: 'healing'

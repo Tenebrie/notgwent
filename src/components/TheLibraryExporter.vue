@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<the-editor-mode-dropdown />
 		<base-button @click='exportCurrentCard'>Export current card</base-button>
 		<base-button @click='exportLibrary'>Export library</base-button>
 	</div>
@@ -9,9 +10,11 @@
 import { mapState } from 'vuex'
 import BaseButton from './BaseButton'
 import { getCardFileName, saveAsFile } from '../util/util'
+import TheEditorModeDropdown from './TheEditorModeDropdown'
 
 export default {
 	components: {
+		TheEditorModeDropdown,
 		BaseButton
 	},
 

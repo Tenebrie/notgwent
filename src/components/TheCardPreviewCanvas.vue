@@ -8,7 +8,7 @@
 <script>
 import { mapMutations, mapState } from 'vuex'
 import { getCardFileName, stripMarkup } from '../util/util'
-import { Event, Color, Type, AttackType } from '../util/constant'
+import { Event, Color, Type, AttackType, EditorMode } from '../util/constant'
 import { throttle } from 'throttle-debounce'
 
 export default {
@@ -175,7 +175,8 @@ export default {
 		...mapState({
 			customArtOffsetX: state => state.cardState.customImageOffsetX,
 			customArtOffsetY: state => state.cardState.customImageOffsetY,
-			customArtZoom: state => state.cardState.customImageZoom
+			customArtZoom: state => state.cardState.customImageZoom,
+			editorMode: state => state.cardImporter.editorMode
 		}),
 
 		previewContext() {
@@ -297,6 +298,12 @@ export default {
 				this.renderImage(ctx, 'bg-element-summoning')
 			} else if (state.cardType === Type.SPELL) {
 				this.renderImage(ctx, 'bg-element-control')
+			}
+
+			if (this.editorMode === EditorMode.PRODUCTION) {
+				this.clearCanvasRenderThrottleTimer()
+				this.swapContext()
+				return
 			}
 
 			if (state.cardDescription !== '') {
