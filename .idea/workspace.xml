@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="899d0b9b-309f-4cf2-8190-77465e5061df" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/TheEditorModeDropdown.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/TheCardPreviewCanvas.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TheCardPreviewCanvas.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TheLibraryExporter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TheLibraryExporter.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/CardImporterModule.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/CardImporterModule.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/constant.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/constant.js" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,13 +23,17 @@
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="HTML" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -58,15 +57,15 @@
       <recent name="W:\Workspace\notgwent\src\modules" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="ServiceViewManager">
+    <option name="viewStates">
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
       </list>
     </option>
   </component>
@@ -103,6 +102,7 @@
       <workItem from="1578741194920" duration="3511000" />
       <workItem from="1579022995234" duration="2191000" />
       <workItem from="1579095836370" duration="5520000" />
+      <workItem from="1582305593741" duration="315000" />
     </task>
     <servers />
   </component>

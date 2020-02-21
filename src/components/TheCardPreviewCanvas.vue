@@ -46,6 +46,10 @@ export default {
 
 		customArtwork: function() {
 			this.renderCanvasAfterDelay()
+		},
+
+		editorMode: function() {
+			this.renderCanvasAfterDelay()
 		}
 	},
 
@@ -290,14 +294,16 @@ export default {
 
 			let state = this.$store.state.cardState
 
-			if (state.cardType === Type.PAWN) {
-				this.renderImage(ctx, 'bg-element-generic')
-			} else if (state.cardType === Type.HERO) {
-				this.renderImage(ctx, 'bg-element-healing')
-			} else if (state.cardType === Type.LEADER) {
-				this.renderImage(ctx, 'bg-element-summoning')
-			} else if (state.cardType === Type.SPELL) {
-				this.renderImage(ctx, 'bg-element-control')
+			if (this.editorMode === EditorMode.PROTOTYPE) {
+				if (state.cardType === Type.PAWN) {
+					this.renderImage(ctx, 'bg-element-generic')
+				} else if (state.cardType === Type.HERO) {
+					this.renderImage(ctx, 'bg-element-healing')
+				} else if (state.cardType === Type.LEADER) {
+					this.renderImage(ctx, 'bg-element-summoning')
+				} else if (state.cardType === Type.SPELL) {
+					this.renderImage(ctx, 'bg-element-control')
+				}
 			}
 
 			if (this.editorMode === EditorMode.PRODUCTION) {
